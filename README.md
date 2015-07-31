@@ -24,25 +24,33 @@ Command Line from the Terminal, for example:
     $
 
 ## Required Configuration
-The recipes and processors need to know where the FileWave Server is located.  
-
+The recipes and processors need to know where the FileWave Server is located.
+  
 To do this, the following environment variables can be used:
 
 1. FW_SERVER_HOST - defaults to 'localhost', can be hostname or IP address
 1. FW_SERVER_PORT - defaults to 20016
 1. FW_ADMIN_USER - defaults to 'fwadmin', its the name of the account that will be used to connect
 1. FW_ADMIN_PASSWORD - defaults to 'filewave', its the password of the FW_ADMIN_USER account
- 
+
+## Security
+By default the recipes will assume you have a pristine FileWave installation 
+which means you have a single FileWave administrator account called 'fwadmin'
+and the password is 'password'.  These are good defaults to ensure a quick 
+start in testing situations - but in production you really really want to 
+change this.
+
+For security reasons - we *strongly* recommend creating another user 
+for use with AutoPkg.  
+
+If you insist on using the fwadmin user - you will see annoying warnings 
+indicating that you are making use of the super-user account.
+   
 ## FW_ADMIN_USER Permissions
-FileWave is multi-user capable.  For security reasons - we *strongly* 
-recommend creating another user for use with AutoPkg.  So much so that if
-  you insist on using the fwadmin user - the program will print out
-  annoying warnings indicating that you are making use of the super-user
-  account.
+FileWave is multi-user capable.  
 
 You should create a user called 'autopkg' and then give this 
-user the following rights: 
- - Update Model
+user the following rights (DO NOT provide update model rights): 
  - Modify Clients/Groups
  - Modify Filesets
  - Modify Associations
@@ -50,7 +58,16 @@ user the following rights:
   
 Then on the machine running autopkg, set the FW_ADMIN_USER value:
 
-    defaults write com.github.autopkg FW_ADMIN_USER api
+    defaults write com.github.autopkg FW_ADMIN_USER autopkg
     
+# Validating Setup (TODO)
+In order to quickly validate whether or not your setup is working you can run
+a dummy recipe that prints out all the FileWave filesets.  This proves that
+the autopkg scripts can correctly location your FileWave Admin Command Line
+tools as well as the priveledges required by your chosen user account. 
 
+    $ autopkg run ValidateSettings.filewave.recipe
+    
+    
+    
 
