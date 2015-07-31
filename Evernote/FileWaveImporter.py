@@ -110,6 +110,15 @@ class FileWaveImporter(Processor):
             print_output=True
         )
 
+        app_version = self.env.get('version', None)
+        if app_version is not None:
+            # get all filesets and see if we have an app with this name, at
+            # a lower version - if not, we can import.
+            filesets = client.get_filesets()
+            for fileset in filesets:
+                print fileset
+            pass
+
         import_source = self.env['fw_import_source']
         if not os.path.exists(import_source):
             raise ProcessorError("Import source %s does not exist" %

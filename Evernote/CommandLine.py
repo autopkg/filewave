@@ -34,19 +34,21 @@ class Association(object):
 
 
 class Fileset(object):
-    def __init__(self, id, name, type, size, parent_id):
+    def __init__(self, id, name, type, size, parent_id, custom_properties=None):
         self.id = str(id)
         self.name = name
         self.type = type
         self.size = size
+        self.custom_properties = custom_properties
         self.parent_id = str(parent_id)
 
     def __str__(self):
-        return "%s - name: %s, type: %s, parent: %s" % (
+        return "%s - name: %s, type: %s, parent: %s, props: %s" % (
             self.id,
             self.name,
             self.type,
             self.parent_id,
+            self.custom_properties
         )
 
 class FWAdminClient(object):
@@ -152,7 +154,7 @@ class FWAdminClient(object):
             yield Association(**assoc)
 
     def create_association(self, client_id, fileset_id, kiosk=False, sw_update=False, error_expected=False ):
-        args = ['--createAssociation', '--clientgroup_id', client_id, '--fileset_id', fileset_id]
+        args = ['--createAssociation', '--clientgroup', client_id, '--fileset', fileset_id]
         if kiosk:
             args.append('--kiosk')
 
@@ -174,7 +176,7 @@ class FWAdminClient(object):
         if root:
             options.extend(["--root", root])
         if target:
-            options.extend(["--target", str(target)])
+            options.extend(["--filesetgroup", str(target)])
 
         import_folder_result = self.run_admin(options)
         matcher = re.compile(r'new fileset with ID (?P<id>.+) was created')
@@ -201,7 +203,7 @@ class FWAdminClient(object):
         if root:
             options.extend(["--root", root])
         if target:
-            options.extend(["--target", str(target)])
+            options.extend(["--filesetgroup", str(target)])
 
         import_package_result = self.run_admin(options)
         matcher = re.compile(r'new fileset with ID (?P<id>.+) was created')
@@ -223,7 +225,7 @@ class FWAdminClient(object):
     def create_empty_fileset(self, name, target=None):
         options = ['--createFileset', str(name)]
         if target:
-            options.extend(["--target", str(target)])
+            options.extend(["--filesetgroup", str(target)])
         create_empty_fileset_result = self.run_admin(options)
         print create_empty_fileset_result
         matcher = re.compile(r'new fileset (?P<id>.+) created with name (?P<name>.+)')

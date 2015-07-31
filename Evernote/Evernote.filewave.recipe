@@ -40,18 +40,31 @@ http://update.evernote.com/prerelease/ENMac/EvernoteMacUpdate.xml
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.johncclayton.filewave.Evernote/FileWaveImporter</string>
+            <string>PlistReader</string>
             <key>Arguments</key>
             <dict>
-                <key>fw_import_source</key>
-                <string>%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app</string>
-                <key>fw_fileset_name</key>
-                <string>%NAME%</string>
-                <key>fw_fileset_group</key>
-                <string>Mac Desktop</string>
-                <key>fw_destination_root</key>
-                <string>/Applications/%NAME%.app</string>
+                <key>info_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%/Evernote.app/Contents/Info.plist</string>
+                <key>plist_keys</key>
+                <dict>
+                    <key>CFBundleIdentifier</key>
+                    <string>bundle_id</string>
+                    <key>CFBundleShortVersionString</key>
+                    <string>version</string>
+                </dict>
             </dict>
+        </dict>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.johncclayton.filewave.Evernote/FileWaveImporter</string>
+            <key>fw_import_source</key>
+            <string>%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app</string>
+            <key>fw_fileset_name</key>
+            <string>%NAME%</string>
+            <key>fw_fileset_group</key>
+            <string>Mac Desktop</string>
+            <key>fw_destination_root</key>
+            <string>/Applications/%NAME%.app</string>
         </dict>
     </array>
 </dict>
