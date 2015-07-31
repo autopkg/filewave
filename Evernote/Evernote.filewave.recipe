@@ -40,16 +40,16 @@ http://update.evernote.com/prerelease/ENMac/EvernoteMacUpdate.xml
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.johncclayton.filewave.Evernote/FileWaveFolderImporter</string>
+            <string>com.github.johncclayton.filewave.Evernote/FileWaveImporter</string>
             <key>Arguments</key>
             <dict>
-                <key>import_source</key>
+                <key>fw_import_source</key>
                 <string>%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app</string>
-                <key>fileset_name</key>
+                <key>fw_fileset_name</key>
                 <string>%NAME%</string>
-                <key>fileset_group</key>
+                <key>fw_fileset_group</key>
                 <string>Mac Desktop</string>
-                <key>destination_root</key>
+                <key>fw_destination_root</key>
                 <string>/Applications/%NAME%.app</string>
             </dict>
         </dict>

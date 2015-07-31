@@ -1,40 +1,9 @@
-#!/usr/bin/python
-#
-# Copyright 2015 FileWave (Europe) GmbH
-#
-# Licensed under the Apache License, Version 2.0 (the "License");
-# you may not use this file except in compliance with the License.
-# You may obtain a copy of the License at
-#
-#     http://www.apache.org/licenses/LICENSE-2.0
-#
-# Unless required by applicable law or agreed to in writing, software
-# distributed under the License is distributed on an "AS IS" BASIS,
-# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-# See the License for the specific language governing permissions and
-# limitations under the License.
-"""See docstring for DmgCreator class"""
-
-from autopkglib import Processor, ProcessorError
-
-import os
-import os.path
 import subprocess
 from subprocess import CalledProcessError
-import re
+import re, os
 import json
 import platform
-
-__all__ = ["FileWaveFolderImporter"]
-
-FW_FILESET_GROUP = "AutoPkg Import"
-FW_FILESET_DESTINATION = "/Applications"
-
-DEFAULT_FW_SERVER_HOST = "localhost"
-DEFAULT_FW_SERVER_PORT = 20016
-
-DEFAULT_FW_ADMIN_USERNAME = "fwadmin"
-DEFAULT_FW_ADMIN_PASSWORD = "filewave"
+import os.path
 
 class Client(object):
     def __init__(self, id, name, type, parent_id):
@@ -90,9 +59,9 @@ class FWAdminClient(object):
                  remove_fs_callback=None,
                  print_output=False):
 
-        appPath = ''
         systemName = platform.system()
 
+        appPath = ''
         if 'Darwin' == systemName:
             appPath = "%s/FileWave Admin.app/Contents/MacOS/FileWave Admin"
         elif 'Windows' == systemName:
@@ -127,6 +96,7 @@ class FWAdminClient(object):
             process_options.extend(options)
 
         got_error = False
+
         ret = None
         try:
             if print_output:
@@ -262,108 +232,3 @@ class FWAdminClient(object):
         if self.create_fs_callback and hasattr(self.create_fs_callback, '__call__'):
             self.create_fs_callback(id)
         return id
-
-FILEWAVE_SUMMARY_RESULT = 'filewave_summary_result'
-
-class FileWaveProcessor(Processor):
-    pass
-
-class FileWaveFolderImporter(FileWaveProcessor):
-    """Imports a directory as a fileset into FileWave."""
-
-    description = __doc__
-
-    input_variables = {
-        "FW_SERVER_HOST": {
-            "description": ("The hostname/ip of the FileWave server.  Defaults to %s"
-                           % DEFAULT_FW_SERVER_HOST),
-            "required": True,
-        },
-        "FW_SERVER_PORT": {
-            "description": ("The port number of the FileWave server.  Defaults to %s"
-                            % DEFAULT_FW_SERVER_PORT),
-            "required": True,
-        },
-        "FW_ADMIN_USER": {
-            "description": ("The username to use when connecting to the FileWave server.  Defaults to %s"
-                            % DEFAULT_FW_ADMIN_USERNAME),
-            "required": True,
-        },
-        "FW_ADMIN_PASSWORD": {
-            "description": ("The password to use when connecting to the FileWave server.  Defaults to %s"
-                            % DEFAULT_FW_ADMIN_PASSWORD),
-            "required": True,
-        },
-        "import_source": {
-            "required": True,
-            "description": "The file/folder that will be imported into the FileWave fileset, can be pkg or folder.",
-        },
-        "fileset_name": {
-            "required": True,
-            "description": "The name of the fileset to be created (will be made unique if it isnt already).",
-        },
-        "fileset_group": {
-            "required": False,
-            "description": "The name of the fileset group to import into - can be left blank, will be created if it does not exist.",
-        },
-        "destination_root": {
-            "required": False,
-            "description": ("The location at which to place all the imported data.  Defaults to %s"
-                             % FW_FILESET_DESTINATION ),
-        },
-    }
-
-    output_variables = {
-        "fileset_id": {
-            "description": "The resulting FileWave fileset ID for the newly created fileset."
-        },
-        FILEWAVE_SUMMARY_RESULT: {
-            "description": "Summary of what was imported into FileWave."
-        }}
-
-    def main(self):
-        client = FWAdminClient(
-            admin_name=self.env.get('FW_ADMIN_USER', DEFAULT_FW_ADMIN_USERNAME),
-            admin_pwd=self.env.get('FW_ADMIN_PASSWORD', DEFAULT_FW_ADMIN_PASSWORD),
-            server_host=self.env.get('FW_SERVER_HOST', DEFAULT_FW_SERVER_HOST),
-            server_port=self.env.get('FW_SERVER_PORT', DEFAULT_FW_SERVER_PORT),
-            print_output=True
-        )
-
-        import_source = self.env['import_source']
-
-        fileset_name = self.env['fileset_name']
-        fileset_group = self.env.get('fileset_group', None)
-        destination_root = self.env.get('destination_root', FW_FILESET_DESTINATION)
-
-        try:
-            # TODO: if input_source is pkg use import_package not import_folder
-
-            self.env['fileset_id'] = client.import_folder(path=import_source,
-                                                          name=fileset_name,
-                                                          root=destination_root,
-                                                          target=fileset_group)
-
-            if FILEWAVE_SUMMARY_RESULT in self.env:
-                del self.env[FILEWAVE_SUMMARY_RESULT]
-
-            self.env[FILEWAVE_SUMMARY_RESULT] = {
-                'summary_text': 'The following fileset was imported:',
-                'report_fields': ['fileset_id', 'Fileset Group', 'Fileset Name'],
-                'data': {
-                    'fileset_id': self.env['fileset_id'],
-                    'fileset_group': fileset_group,
-                    'fileset_name': fileset_name
-                }
-        }
-        except Exception, e:
-            raise ProcessorError("Error importing the folder '%s' into FileWave as a fileset called '%s', detail: %s" %
-                                 (import_source, fileset_name, e))
-
-        self.output("Created Fileset <%s> from folder '%s' at root '%s'"
-                    % (fileset_name, import_source, destination_root))
-
-if __name__ == '__main__':
-    PROCESSOR = FileWaveFolderImporter()
-    PROCESSOR.execute_shell()
-
