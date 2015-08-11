@@ -24,6 +24,7 @@ import sys
 # this Processor was imported via autopkg explicitly, the directory is not in
 # the search path.
 sys.path.append(os.path.dirname(__file__))
+
 from CommandLine import FWAdminClient
 from FWTool import COMMON_FILEWAVE_VARIABLES, FWTool
 

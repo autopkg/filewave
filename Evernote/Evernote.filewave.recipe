@@ -57,14 +57,17 @@ http://update.evernote.com/prerelease/ENMac/EvernoteMacUpdate.xml
         <dict>
             <key>Processor</key>
             <string>com.github.johncclayton.filewave.FWTool/FileWaveImporter</string>
-            <key>fw_import_source</key>
-            <string>%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app</string>
-            <key>fw_fileset_name</key>
-            <string>%NAME%</string>
-            <key>fw_fileset_group</key>
-            <string>Mac Desktop</string>
-            <key>fw_destination_root</key>
-            <string>/Applications/%NAME%.app</string>
+            <key>Arguments</key>
+            <dict>
+                <key>fw_import_source</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app</string>
+                <key>fw_fileset_name</key>
+                <string>%NAME%</string>
+                <key>fw_fileset_group</key>
+                <string>Mac Desktop</string>
+                <key>fw_destination_root</key>
+                <string>/Applications/%NAME%.app</string>
+            </dict>
         </dict>
     </array>
 </dict>

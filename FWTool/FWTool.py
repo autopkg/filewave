@@ -13,11 +13,13 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
+
 """See docstring for FWTool class"""
 from autopkglib import Processor, ProcessorError
 
 import os
 import os.path
+from subprocess import CalledProcessError
 import sys
 
 # Ensure that the FWAdminClient can be imported from CommandLine module, since
@@ -74,7 +76,8 @@ class FWTool(Processor):
 
     client = None
 
-    def main(self):
+    def validate_tools(self, print_path=False):
+
         self.client = FWAdminClient(
             admin_name=self.env['FW_ADMIN_USER'],
             admin_pwd=self.env['FW_ADMIN_PASSWORD'],
@@ -83,16 +86,29 @@ class FWTool(Processor):
             print_output=False
         )
 
-        version = "Unknown"
-        can_list_filesets = "No"
-
         print "Path to Admin Tool:", FWAdminClient.get_admin_tool_path()
 
-        version = self.client.get_version()
-        can_list_filesets = "Yes" if self.client.get_filesets() is not None else "No"
-        major, minor, patch = version.split('.')
-        if int(major) < 10:
-            raise ProcessorError("FileWave Version 10.0 must be installed - you have version %s" % (version))
+        self.version = self.client.get_version()
+        self.major, self.minor, self.patch = self.version.split('.')
+        if int(self.major) < 10:
+            raise ProcessorError("FileWave Version 10.0 must be installed - you have version %s" % (self.version))
+
+        self.can_list_filesets = "No"
+        self.exit_status_message = "VALIDATION OK"
+        self.exception = None
+
+        try:
+            the_filesets = self.client.get_filesets()
+            count_filesets = sum(1 for i in the_filesets)
+            self.can_list_filesets = "Yes" if count_filesets >= 0 else "No"
+        except CalledProcessError, e:
+            self.exception = e
+            self.exit_status_message = FWAdminClient.ExitStatusDescription[e.returncode][1]
+        except Exception:
+            self.exception = e
+
+    def main(self):
+        self.validate_tools(print_path=True)
 
         if self.env['FW_ADMIN_USER'] == 'fwadmin':
             self.output("WARNING: You are using the FileWave super-user account")
@@ -106,16 +122,20 @@ class FWTool(Processor):
                               'fw_admin_user',
                               'fw_server_host',
                               'fw_server_port',
-                              'fw_can_list_filesets'
+                              'fw_can_list_filesets',
+                              'fw_message'
                               ],
             'data': {
-                'fw_admin_console_version': version,
+                'fw_admin_console_version': self.version,
                 'fw_admin_user': self.env['FW_ADMIN_USER'],
                 'fw_server_host': self.env['FW_SERVER_HOST'],
                 'fw_server_port': self.env['FW_SERVER_PORT'],
-                'fw_can_list_filesets': can_list_filesets
+                'fw_can_list_filesets': self.can_list_filesets,
+                'fw_message': self.exit_status_message
             }}
 
+        if self.exception is not None:
+            print self.exception
 
 if __name__ == '__main__':
     PROCESSOR = FWTool()

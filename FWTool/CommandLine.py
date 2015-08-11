@@ -52,6 +52,26 @@ class Fileset(object):
         )
 
 class FWAdminClient(object):
+
+    ExitStatusDescription = {
+        0: ("kExitOK", "No Error"),
+        100: ("kExitUnknownError", "Unknown Error"),
+        101: ("kExitFilesetNotExists", "The given fileset does not exist"),
+        102: ("kExitClientNotExists", "The given client does not exist"),
+        103: ("kExitGroupNotExists", "The given group does not exist"),
+        104: ("kExitTargetIsNotGroup", "The given target does not exist"),
+        105: ("kExitDBError", "Database internal error"),
+        106: ("kExitFilesetUploadError", "Error while uploading fileset"),
+        107: ("kExitModelUpdateError", "Error while updating the model"),
+        108: ("kExitLoginError", "Login Error or Version Mismatch"),
+        109: ("kExitImportFilesetError", "Error while importing a fileset"),
+        110: ("kExitUnknownImportType", "Package type not supported for import"),
+        111: ("kExitParseError", "Command line parse failed"),
+        112: ("kExitAssociationToImagingFilesetError", "Can't create association with an imaging fileset"),
+        113: ("kExitGroupCreationError", "Can't create a new fileset group"),
+        114: ("kExitFilesetMergeError", "Cannot merge files in the fileset")
+    }
+
     def __init__(self,
                  admin_name = 'fwadmin',
                  admin_pwd = 'filewave',
