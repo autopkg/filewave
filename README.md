@@ -60,12 +60,25 @@ Then on the machine running autopkg, set the FW_ADMIN_USER value:
 
     defaults write com.github.autopkg FW_ADMIN_USER autopkg
     
-# Validating Setup (TODO)
+# Validating Setup 
 In order to quickly validate whether or not your setup is working you can run
-a dummy recipe that prints out all the FileWave filesets.  This proves that
-the autopkg scripts and FileWave magic sauce are working well together. 
+a dummy recipe that will invoke the FileWave command line tools to print out 
+relevant version information.  
 
-    $ autopkg run ValidateSettings.filewave.recipe
+This simple test proves that the autopkg scripts and FileWave magic sauce 
+are working well together. 
+
+For example (assuming that you've set the FW_ADMIN_USER to autopkg):
+
+    $ autopkg run FWTool.filewave
+    Path to Admin Tool: /Applications/FileWave/FileWave Admin.app/Contents/MacOS/FileWave Admin
+
+    Here are the results of installation validation:
+    Fw Admin Console Version  Fw Admin User  Fw Server Host  Fw Server Port  Fw Can List Filesets  
+    ------------------------  -------------  --------------  --------------  --------------------  
+    10.0.0                    autopkg        localhost       20016           Yes                   
+
+
     
     
     
