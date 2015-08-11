@@ -1,0 +1,123 @@
+#!/usr/bin/python
+#
+# Copyright 2015 FileWave (Europe) GmbH
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+"""See docstring for FWTool class"""
+from autopkglib import Processor, ProcessorError
+
+import os
+import os.path
+import sys
+
+# Ensure that the FWAdminClient can be imported from CommandLine module, since
+# this Processor was imported via autopkg explicitly, the directory is not in
+# the search path.
+sys.path.append(os.path.dirname(__file__))
+from CommandLine import FWAdminClient
+
+FWTOOL_SUMMARY_RESULT = 'fwtool_summary_result'
+DEFAULT_FW_SERVER_HOST = "localhost"
+DEFAULT_FW_SERVER_PORT = "20016"
+DEFAULT_FW_ADMIN_USERNAME = "fwadmin"
+DEFAULT_FW_ADMIN_PASSWORD = "filewave"
+
+COMMON_FILEWAVE_VARIABLES = {
+        "FW_SERVER_HOST": {
+            "default": DEFAULT_FW_SERVER_HOST,
+            "description": ("The hostname/ip of the FileWave server.  Defaults to %s"
+                           % DEFAULT_FW_SERVER_HOST),
+            "required": False,
+        },
+        "FW_SERVER_PORT": {
+            "default": DEFAULT_FW_SERVER_PORT,
+            "description": ("The port number of the FileWave server.  Defaults to %s"
+                            % DEFAULT_FW_SERVER_PORT),
+            "required": False,
+        },
+        "FW_ADMIN_USER": {
+            "default": DEFAULT_FW_ADMIN_USERNAME,
+            "description": ("The username to use when connecting to the FileWave server.  Defaults to %s"
+                            % DEFAULT_FW_ADMIN_USERNAME),
+            "required": False,
+        },
+        "FW_ADMIN_PASSWORD": {
+            "default": DEFAULT_FW_ADMIN_PASSWORD,
+            "description": ("The password to use when connecting to the FileWave server.  Defaults to %s"
+                            % DEFAULT_FW_ADMIN_PASSWORD),
+            "required": False,
+        }
+}
+
+class FWTool(Processor):
+    """Validates that the FileWave Admin Command Line tools are available on this machine."""
+
+    description = __doc__
+
+    input_variables = COMMON_FILEWAVE_VARIABLES
+
+    output_variables = {
+        FWTOOL_SUMMARY_RESULT: {
+            "description": "The results of the installation/validation check."
+        },
+    }
+
+    client = None
+
+    def main(self):
+        self.client = FWAdminClient(
+            admin_name=self.env['FW_ADMIN_USER'],
+            admin_pwd=self.env['FW_ADMIN_PASSWORD'],
+            server_host=self.env['FW_SERVER_HOST'],
+            server_port=self.env['FW_SERVER_PORT'],
+            print_output=False
+        )
+
+        version = "Unknown"
+        can_list_filesets = "No"
+
+        print "Path to Admin Tool:", FWAdminClient.get_admin_tool_path()
+
+        version = self.client.get_version()
+        can_list_filesets = "Yes" if self.client.get_filesets() is not None else "No"
+        major, minor, patch = version.split('.')
+        if int(major) < 10:
+            raise ProcessorError("FileWave Version 10.0 must be installed - you have version %s" % (version))
+
+        if self.env['FW_ADMIN_USER'] == 'fwadmin':
+            self.output("WARNING: You are using the FileWave super-user account")
+
+        if FWTOOL_SUMMARY_RESULT in self.env:
+            del self.env[FWTOOL_SUMMARY_RESULT]
+
+        self.env[FWTOOL_SUMMARY_RESULT] = {
+            'summary_text': 'Here are the results of installation validation:',
+            'report_fields': ['fw_admin_console_version',
+                              'fw_admin_user',
+                              'fw_server_host',
+                              'fw_server_port',
+                              'fw_can_list_filesets'
+                              ],
+            'data': {
+                'fw_admin_console_version': version,
+                'fw_admin_user': self.env['FW_ADMIN_USER'],
+                'fw_server_host': self.env['FW_SERVER_HOST'],
+                'fw_server_port': self.env['FW_SERVER_PORT'],
+                'fw_can_list_filesets': can_list_filesets
+            }}
+
+
+if __name__ == '__main__':
+    PROCESSOR = FWTool()
+    PROCESSOR.execute_shell()
+

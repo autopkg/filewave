@@ -61,8 +61,19 @@ class FWAdminClient(object):
                  remove_fs_callback=None,
                  print_output=False):
 
-        systemName = platform.system()
+        self.fwadmin_executable = self.get_admin_tool_path()
+        self.connection_options = ['-u', admin_name,
+                                   '-p', admin_pwd,
+                                   '-H', server_host,
+                                   '-P', server_port ]
 
+        self.print_output = print_output
+        self.create_fs_callback = create_fs_callback
+        self.remove_fs_callback = remove_fs_callback
+
+    @classmethod
+    def get_admin_tool_path(cls):
+        systemName = platform.system()
         appPath = ''
         if 'Darwin' == systemName:
             appPath = "%s/FileWave Admin.app/Contents/MacOS/FileWave Admin"
@@ -73,15 +84,7 @@ class FWAdminClient(object):
         else:
             raise Exception( 'Unsupported platform' )
 
-        self.fwadmin_executable = appPath % self.get_executable_path()
-        self.connection_options = ['-u', admin_name,
-                                   '-p', admin_pwd,
-                                   '-H', server_host,
-                                   '-P', server_port ]
-
-        self.print_output = print_output
-        self.create_fs_callback = create_fs_callback
-        self.remove_fs_callback = remove_fs_callback
+        return appPath % cls.get_executable_path()
 
     @classmethod
     def get_executable_path(cls):
@@ -118,6 +121,10 @@ class FWAdminClient(object):
             raise Exception("Expected an error, but command was successful")
 
         return ret
+
+    def get_version(self):
+        version = self.run_admin("-v")
+        return version
 
     def get_clients(self):
         clients = json.loads(self.run_admin("--listClients"))

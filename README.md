@@ -49,7 +49,7 @@ indicating that you are making use of the super-user account.
 ## FW_ADMIN_USER Permissions
 FileWave is multi-user capable.  
 
-You should create a user called 'autopkg' and then give this 
+Take advantage of this and create a user called 'autopkg' and give this 
 user the following rights (DO NOT provide update model rights): 
  - Modify Clients/Groups
  - Modify Filesets
@@ -63,8 +63,7 @@ Then on the machine running autopkg, set the FW_ADMIN_USER value:
 # Validating Setup (TODO)
 In order to quickly validate whether or not your setup is working you can run
 a dummy recipe that prints out all the FileWave filesets.  This proves that
-the autopkg scripts can correctly location your FileWave Admin Command Line
-tools as well as the priveledges required by your chosen user account. 
+the autopkg scripts and FileWave magic sauce are working well together. 
 
     $ autopkg run ValidateSettings.filewave.recipe
     

@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Validates that the FileWave recipe setup is correct, and provides
+    a placeholder to put the Processors required for FileWave recipes.
+    </string>
+
+    <key>Input</key>
+    <dict>
+        <key>SPARKLE_FEED_URL</key>
+        <string>http://update.evernote.com/public/ENMac/EvernoteMacUpdate.xml</string>
+    </dict>
+
+    <key>Identifier</key>
+    <string>com.github.johncclayton.filewave.FWTool</string>
+
+    <key>MinimumVersion</key>
+    <string>0.5.0</string>
+
+    <key>Process</key>
+	<array>
+        <dict>
+            <key>Processor</key>
+            <string>com.github.johncclayton.filewave.FWTool/FWTool</string>
+        </dict>
+    </array>
+</dict>
+</plist>

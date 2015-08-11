@@ -20,7 +20,7 @@ http://update.evernote.com/prerelease/ENMac/EvernoteMacUpdate.xml
         <string>http://update.evernote.com/public/ENMac/EvernoteMacUpdate.xml</string>
     </dict>
     <key>MinimumVersion</key>
-    <string>0.2.0</string>
+    <string>0.5.0</string>
     <key>ParentRecipe</key>
 	<string>com.github.autopkg.download.Evernote</string>
     <key>Process</key>
@@ -56,7 +56,7 @@ http://update.evernote.com/prerelease/ENMac/EvernoteMacUpdate.xml
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.johncclayton.filewave.Evernote/FileWaveImporter</string>
+            <string>com.github.johncclayton.filewave.FWTool/FileWaveImporter</string>
             <key>fw_import_source</key>
             <string>%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app</string>
             <key>fw_fileset_name</key>

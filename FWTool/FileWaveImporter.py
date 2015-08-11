@@ -13,7 +13,7 @@
 # WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
 # See the License for the specific language governing permissions and
 # limitations under the License.
-"""See docstring for DmgCreator class"""
+"""See docstring for FileWaveImporter class"""
 from autopkglib import Processor, ProcessorError
 
 import os
@@ -24,48 +24,13 @@ import sys
 # this Processor was imported via autopkg explicitly, the directory is not in
 # the search path.
 sys.path.append(os.path.dirname(__file__))
-
 from CommandLine import FWAdminClient
-
-__all__ = ["FileWaveImporter"]
+from FWTool import COMMON_FILEWAVE_VARIABLES, FWTool
 
 FW_FILESET_DESTINATION = "/Applications"
-
-DEFAULT_FW_SERVER_HOST = "localhost"
-DEFAULT_FW_SERVER_PORT = "20016"
-DEFAULT_FW_ADMIN_USERNAME = "fwadmin"
-DEFAULT_FW_ADMIN_PASSWORD = "filewave"
-
 FILEWAVE_SUMMARY_RESULT = 'filewave_summary_result'
 
-COMMON_FILEWAVE_VARIABLES = {
-        "FW_SERVER_HOST": {
-            "default": DEFAULT_FW_SERVER_HOST,
-            "description": ("The hostname/ip of the FileWave server.  Defaults to %s"
-                           % DEFAULT_FW_SERVER_HOST),
-            "required": False,
-        },
-        "FW_SERVER_PORT": {
-            "default": DEFAULT_FW_SERVER_PORT,
-            "description": ("The port number of the FileWave server.  Defaults to %s"
-                            % DEFAULT_FW_SERVER_PORT),
-            "required": False,
-        },
-        "FW_ADMIN_USER": {
-            "default": DEFAULT_FW_ADMIN_USERNAME,
-            "description": ("The username to use when connecting to the FileWave server.  Defaults to %s"
-                            % DEFAULT_FW_ADMIN_USERNAME),
-            "required": False,
-        },
-        "FW_ADMIN_PASSWORD": {
-            "default": DEFAULT_FW_ADMIN_PASSWORD,
-            "description": ("The password to use when connecting to the FileWave server.  Defaults to %s"
-                            % DEFAULT_FW_ADMIN_PASSWORD),
-            "required": False,
-        }
-}
-
-class FileWaveImporter(Processor):
+class FileWaveImporter(FWTool):
     """Imports a path as a fileset into FileWave.  The path points to either a Mac Package or a folder."""
 
     description = __doc__
@@ -102,19 +67,13 @@ class FileWaveImporter(Processor):
         }}
 
     def main(self):
-        client = FWAdminClient(
-            admin_name=self.env['FW_ADMIN_USER'],
-            admin_pwd=self.env['FW_ADMIN_PASSWORD'],
-            server_host=self.env['FW_SERVER_HOST'],
-            server_port=self.env['FW_SERVER_PORT'],
-            print_output=True
-        )
+        super(FileWaveImporter, self).main()
 
         app_version = self.env.get('version', None)
         if app_version is not None:
             # get all filesets and see if we have an app with this name, at
             # a lower version - if not, we can import.
-            filesets = client.get_filesets()
+            filesets = self.client.get_filesets()
             for fileset in filesets:
                 print fileset
             pass
@@ -134,12 +93,12 @@ class FileWaveImporter(Processor):
 
             filename, file_extension = os.path.splitext(import_source)
             if file_extension in [ "pkg", "mpkg", "msi" ]:
-                fileset_id = client.import_package(path=import_source,
+                fileset_id = self.client.import_package(path=import_source,
                                                    name=fileset_name,
                                                    root=destination_root,
                                                    target=fileset_group)
             elif os.path.isdir(import_source):
-                fileset_id = client.import_folder(path=import_source,
+                fileset_id = self.client.import_folder(path=import_source,
                                                   name=fileset_name,
                                                   root=destination_root,
                                                   target=fileset_group)
@@ -162,9 +121,6 @@ class FileWaveImporter(Processor):
             raise ProcessorError("Error importing the folder '%s' into FileWave \
                             as a fileset called '%s', detail: %s" %
                                  (import_source, fileset_name, e))
-
-        self.output("Created Fileset <%s> from folder '%s' at root '%s'"
-                    % (fileset_name, import_source, destination_root))
 
 if __name__ == '__main__':
     PROCESSOR = FileWaveImporter()
