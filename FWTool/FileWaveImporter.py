@@ -15,6 +15,7 @@
 # limitations under the License.
 """See docstring for FileWaveImporter class"""
 from autopkglib import Processor, ProcessorError
+from distutils.version import LooseVersion, StrictVersion
 
 import os
 import os.path
@@ -54,6 +55,20 @@ class FileWaveImporter(FWTool):
             "required": False,
             "description": ("The location at which to place all the imported data.  Defaults to %s"
                              % FW_FILESET_DESTINATION )
+        },
+        "fw_app_bundle_id": {
+            "default": None,
+            "required": False,
+            "description": "If specified the importer will use this value to \
+            locate other filesets representing the same application in order to \
+            perform a version check - i.e. only newer app versions will be \
+            imported.  This should be the CFBundleIdentifier from the apps Info.plist"
+        },
+        "fw_app_version": {
+            "default": None,
+            "required": False,
+            "description": "This should be the CFBundleShortVersionString value \
+                           from the apps Info.plist."
         }
     }
 
@@ -68,16 +83,24 @@ class FileWaveImporter(FWTool):
         }}
 
     def main(self):
-        super(FileWaveImporter, self).main()
+        self.validate_tools(print_path=False)
 
-        app_version = self.env.get('version', None)
-        if app_version is not None:
-            # get all filesets and see if we have an app with this name, at
-            # a lower version - if not, we can import.
+        fw_app_bundle_id = self.env.get('fw_app_bundle_id', None)
+        fw_app_version = self.env.get('fw_app_version', None)
+        check_version = fw_app_bundle_id is not None and fw_app_version is not None
+
+        # perform version check by scanning existing filesets?
+        if check_version:
             filesets = self.client.get_filesets()
             for fileset in filesets:
-                print fileset
-            pass
+                app_bundle_id = fileset.custom_properties.get("autopkg_app_bundle_id", None)
+                app_version = fileset.custom_properties.get("autopkg_app_version", None)
+
+                if app_bundle_id == fw_app_bundle_id and \
+                                LooseVersion(app_version) >= LooseVersion(fw_app_version):
+                    print "This app version is already satisfied by the fileset %s called '%s' (%s, %s)" %\
+                          (fileset.id, fileset.name, fw_app_bundle_id, fw_app_version )
+                    return
 
         import_source = self.env['fw_import_source']
         if not os.path.exists(import_source):
@@ -117,6 +140,11 @@ class FileWaveImporter(FWTool):
                 }}
 
             self.env['fw_fileset_id'] = fileset_id
+
+            if fileset_id is not None and check_version:
+                # re-write the props back into the fileset
+                self.client.set_property(fileset_id, "autopkg_app_bundle_id", fw_app_bundle_id)
+                self.client.set_property(fileset_id, "autopkg_app_version", fw_app_version)
 
         except Exception, e:
             raise ProcessorError("Error importing the folder '%s' into FileWave \

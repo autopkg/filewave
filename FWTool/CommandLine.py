@@ -240,6 +240,10 @@ class FWAdminClient(object):
             self.create_fs_callback(id)
         return id
 
+    def set_property(self, fileset_id, prop_name, prop_value):
+        options = ['--fileset', fileset_id, '--setProperty', '--key', prop_name, '--value', prop_value]
+        self.run_admin(options)
+
     def remove_fileset(self, fileset_id):
         self.run_admin(['--deleteFileset', str(fileset_id)])
         if self.remove_fs_callback and hasattr(self.remove_fs_callback, '__call__'):

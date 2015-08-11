@@ -86,7 +86,8 @@ class FWTool(Processor):
             print_output=False
         )
 
-        print "Path to Admin Tool:", FWAdminClient.get_admin_tool_path()
+        if print_path:
+            print "Path to Admin Tool:", FWAdminClient.get_admin_tool_path()
 
         self.version = self.client.get_version()
         self.major, self.minor, self.patch = self.version.split('.')
@@ -107,11 +108,11 @@ class FWTool(Processor):
         except Exception:
             self.exception = e
 
+        if self.env['FW_ADMIN_USER'] == 'fwadmin':
+            self.output("WARNING: You are using the FileWave super-user account (fwadmin)")
+
     def main(self):
         self.validate_tools(print_path=True)
-
-        if self.env['FW_ADMIN_USER'] == 'fwadmin':
-            self.output("WARNING: You are using the FileWave super-user account")
 
         if FWTOOL_SUMMARY_RESULT in self.env:
             del self.env[FWTOOL_SUMMARY_RESULT]

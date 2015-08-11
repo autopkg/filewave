@@ -74,9 +74,9 @@ For example (assuming that you've set the FW_ADMIN_USER to autopkg):
     Path to Admin Tool: /Applications/FileWave/FileWave Admin.app/Contents/MacOS/FileWave Admin
 
     Here are the results of installation validation:
-    Fw Admin Console Version  Fw Admin User  Fw Server Host  Fw Server Port  Fw Can List Filesets  
-    ------------------------  -------------  --------------  --------------  --------------------  
-    10.0.0                    autopkg        localhost       20016           Yes                   
+    Fw Admin Console Version  Fw Admin User  Fw Server Host  Fw Server Port  Fw Can List Filesets  Fw Message     
+    ------------------------  -------------  --------------  --------------  --------------------  ----------     
+    10.0.0                    autopkg        localhost       20016           Yes                   VALIDATION OK  
 
 
     
