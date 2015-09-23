@@ -23,26 +23,7 @@ Command Line from the Terminal, for example:
     10.0.0
     $
 
-## Quickstart
-If you don't want to read all the details below - setup autopkg as follows:
-
-	1. Create a new FileWave admin account, call it 'autopkg'
-	2. On the machine where you want to run AutoPKG do this:
-		defaults write com.github.autopkg FW_SERVER_HOST <your-fw-server-ip-here>
-		defaults write com.github.autopkg FW_ADMIN_USER autopkg
-		defaults write com.github.autopkg FW_ADMIN_USER <autopkg-user-password-here>
-	3. Check that the setup is working by running the validation, for example (assuming 
-	   that you've set the FW_ADMIN_USER to autopkg as instructed above):
-
-    $ autopkg run FWTool.filewave
-    Path to Admin Tool: /Applications/FileWave/FileWave Admin.app/Contents/MacOS/FileWave Admin
-
-    Here are the results of installation validation:
-    Fw Admin Console Version  Fw Admin User  Fw Server Host  Fw Server Port  Fw Can List Filesets  Fw Message
-    ------------------------  -------------  --------------  --------------  --------------------  ----------
-    10.0.0                    autopkg        localhost       20016           Yes                   VALIDATION OK
-
-## Required Configuration
+## Configuration
 The recipes and processors need to know where the FileWave Server is located, as well
 as which user / password combo to use when uploading packages.
   
@@ -84,7 +65,7 @@ Then on the machine running autopkg, set the FW_ADMIN_USER value:
 
     defaults write com.github.autopkg FW_ADMIN_USER autopkg
     
-# Validating Setup 
+# Validation of the setup
 In order to quickly validate whether or not your setup is working you can run
 a dummy recipe that will invoke the FileWave command line tools to print out 
 relevant version information.  
