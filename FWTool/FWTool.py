@@ -15,7 +15,7 @@
 # limitations under the License.
 
 """See docstring for FWTool class"""
-from autopkglib import Processor, ProcessorError
+from autopkglib import DmgMounter, Processor, ProcessorError
 
 import os
 import os.path
@@ -58,10 +58,15 @@ COMMON_FILEWAVE_VARIABLES = {
             "description": ("The password to use when connecting to the FileWave server.  Defaults to %s"
                             % DEFAULT_FW_ADMIN_PASSWORD),
             "required": False,
+        },
+        "FW_RELAX_VERSION": {
+            "default": False,
+            "description": "Relax the version check and continue on regardless",
+            "required": False
         }
 }
 
-class FWTool(Processor):
+class FWTool(DmgMounter):
     """Validates that the FileWave Admin Command Line tools are available on this machine."""
 
     description = __doc__
@@ -78,6 +83,8 @@ class FWTool(Processor):
 
     def validate_tools(self, print_path=False):
 
+        self.relaxed_version_check = self.env.get('FW_RELAX_VERSION', False)
+
         self.client = FWAdminClient(
             admin_name=self.env['FW_ADMIN_USER'],
             admin_pwd=self.env['FW_ADMIN_PASSWORD'],
@@ -92,7 +99,10 @@ class FWTool(Processor):
         self.version = self.client.get_version()
         self.major, self.minor, self.patch = self.version.split('.')
         if int(self.major) < 10:
-            raise ProcessorError("FileWave Version 10.0 must be installed - you have version %s" % (self.version))
+            if self.relaxed_version_check:
+                self.output("FileWave Version 10.0 must be installed - you have version %s" % (self.version))
+            else:
+                raise ProcessorError("FileWave Version 10.0 must be installed - you have version %s" % (self.version))
 
         self.can_list_filesets = "No"
         self.exit_status_message = "VALIDATION OK"

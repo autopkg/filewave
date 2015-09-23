@@ -16,6 +16,7 @@
 """See docstring for FileWaveImporter class"""
 from autopkglib import Processor, ProcessorError
 from distutils.version import LooseVersion, StrictVersion
+import glob
 
 import os
 import os.path
@@ -40,7 +41,7 @@ class FileWaveImporter(FWTool):
     importer_variables = {
         "fw_import_source": {
             "required": True,
-            "description": "The file/folder that will be imported into the FileWave fileset, can be pkg or folder.",
+            "description": "The file/folder that will be imported into the FileWave fileset, can be dmg, pkg or folder.",
         },
         "fw_fileset_name": {
             "required": True,
@@ -82,6 +83,16 @@ class FileWaveImporter(FWTool):
             "description": "Summary of what was imported into FileWave."
         }}
 
+
+    def find_first_in_path(self, path, ext="app"):
+        """Find app bundle at path."""
+        #pylint: disable=no-self-use
+        apps = glob.glob(os.path.join(path, "*.%s" % (ext)))
+        if len(apps) == 0:
+            raise ProcessorError("No %s found in dmg" % (ext))
+        return apps[0]
+
+
     def main(self):
         self.validate_tools(print_path=False)
 
@@ -111,45 +122,59 @@ class FileWaveImporter(FWTool):
         fileset_group = self.env.get('fw_fileset_group', None)
         destination_root = self.env.get('fw_destination_root',
                                         FW_FILESET_DESTINATION)
+        find_type_in_dmg = self.env.get('fw_dmg_content_type', None)
+
         fileset_id = None
+        dmg_mountpoint = None
+        filename, file_extension = os.path.splitext(import_source)
 
         try:
+            if file_extension in [ "dmg" ] and find_type_in_dmg is not None:
+                dmg_mountpoint = self.mount(import_source)
+                import_source = self.find_first_in_path(dmg_mountpoint, find_type_in_dmg)
+                file_extension = find_type_in_dmg
 
-            filename, file_extension = os.path.splitext(import_source)
-            if file_extension in [ "pkg", "mpkg", "msi" ]:
-                fileset_id = self.client.import_package(path=import_source,
-                                                   name=fileset_name,
-                                                   root=destination_root,
-                                                   target=fileset_group)
-            elif os.path.isdir(import_source):
-                fileset_id = self.client.import_folder(path=import_source,
-                                                  name=fileset_name,
-                                                  root=destination_root,
-                                                  target=fileset_group)
+            try:
 
-            if FILEWAVE_SUMMARY_RESULT in self.env:
-                del self.env[FILEWAVE_SUMMARY_RESULT]
 
-            self.env[FILEWAVE_SUMMARY_RESULT] = {
-                'summary_text': 'The following fileset was imported:',
-                'report_fields': ['fw_fileset_id', 'fw_fileset_group', 'fw_fileset_name'],
-                'data': {
-                    'fw_fileset_id': fileset_id,
-                    'fw_fileset_group': fileset_group if not None else "Root",
-                    'fw_fileset_name': fileset_name
-                }}
+                if file_extension in [ "pkg", "mpkg", "msi" ]:
+                    fileset_id = self.client.import_package(path=import_source,
+                                                       name=fileset_name,
+                                                       root=destination_root,
+                                                       target=fileset_group)
+                elif os.path.isdir(import_source):
+                    fileset_id = self.client.import_folder(path=import_source,
+                                                      name=fileset_name,
+                                                      root=destination_root,
+                                                      target=fileset_group)
 
-            self.env['fw_fileset_id'] = fileset_id
+                if FILEWAVE_SUMMARY_RESULT in self.env:
+                    del self.env[FILEWAVE_SUMMARY_RESULT]
 
-            if fileset_id is not None and check_version:
-                # re-write the props back into the fileset
-                self.client.set_property(fileset_id, "autopkg_app_bundle_id", fw_app_bundle_id)
-                self.client.set_property(fileset_id, "autopkg_app_version", fw_app_version)
+                self.env[FILEWAVE_SUMMARY_RESULT] = {
+                    'summary_text': 'The following fileset was imported:',
+                    'report_fields': ['fw_fileset_id', 'fw_fileset_group', 'fw_fileset_name'],
+                    'data': {
+                        'fw_fileset_id': fileset_id,
+                        'fw_fileset_group': fileset_group if not None else "Root",
+                        'fw_fileset_name': fileset_name
+                    }}
 
-        except Exception, e:
-            raise ProcessorError("Error importing the folder '%s' into FileWave \
-                            as a fileset called '%s', detail: %s" %
-                                 (import_source, fileset_name, e))
+                self.env['fw_fileset_id'] = fileset_id
+
+                if fileset_id is not None and check_version:
+                    # re-write the props back into the fileset
+                    self.client.set_property(fileset_id, "autopkg_app_bundle_id", fw_app_bundle_id)
+                    self.client.set_property(fileset_id, "autopkg_app_version", fw_app_version)
+
+            except Exception, e:
+                raise ProcessorError("Error importing the folder '%s' into FileWave \
+                                as a fileset called '%s', detail: %s" %
+                                     (import_source, fileset_name, e))
+
+        finally:
+            if dmg_mountpoint is not None:
+                self.unmount(dmg_mountpoint)
 
 if __name__ == '__main__':
     PROCESSOR = FileWaveImporter()
