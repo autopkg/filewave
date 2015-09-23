@@ -1,10 +1,10 @@
 # FileWave & AutoPkg
-FileWave specific recipes for AutoPkg.  These recipes allow FileWave admins to
+These recipes allow FileWave admins to
 import applications as filesets or pkgs into FileWave, ready for deployment to
 test machines. 
 
-Our aim was to avoid replicating existing recipes and as such most of the
-recipes will use a parent recipe that is already in the standard autopkg repo.
+Our aim was to avoid replicating existing recipes as much as possible, as such most of the
+recipes will use a parent recipe that is already part of the standard autopkg repo.
 
 ## Pre-requisites
 The following is *required* in order to use these recipes: 
@@ -24,14 +24,21 @@ Command Line from the Terminal, for example:
     $
 
 ## Required Configuration
-The recipes and processors need to know where the FileWave Server is located.
+The recipes and processors need to know where the FileWave Server is located, as well
+as which user / password combo to use when uploading packages.
   
-To do this, the following environment variables can be used:
+To do this, the following variables can be used:
 
 1. FW_SERVER_HOST - defaults to 'localhost', can be hostname or IP address
 1. FW_SERVER_PORT - defaults to 20016
 1. FW_ADMIN_USER - defaults to 'fwadmin', its the name of the account that will be used to connect
 1. FW_ADMIN_PASSWORD - defaults to 'filewave', its the password of the FW_ADMIN_USER account
+
+For example:
+
+	defaults write com.github.autopkg FW_SERVER_HOST 10.3.4.5
+	defaults write com.github.autopkg FW_ADMIN_USER autopkg
+	defaults write com.github.autopkg FW_ADMIN_PASSWORD <mypass>
 
 ## Security
 By default the recipes will assume you have a pristine FileWave installation 
