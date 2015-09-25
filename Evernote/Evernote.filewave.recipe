@@ -43,10 +43,8 @@ http://update.evernote.com/prerelease/ENMac/EvernoteMacUpdate.xml
             <string>com.github.johncclayton.filewave.FWTool/FileWaveImporter</string>
             <key>Arguments</key>
             <dict>
-                <!-- specify the bundle ID & version in order to get FileWave
-                     to check for duplicate imports.  This only works for
-                     filesets imported by AutoPkg, not for filesets you added to
-                     FileWave by hand -->
+                <key>Comment</key>
+                <string>Specify the bundle ID and version in order to get FileWave to check for duplicate imports. This only works for filesets imported by AutoPkg, not for filesets you added to FileWave by hand.</string>
 
                 <key>fw_app_bundle_id</key>
                 <string>com.evernote.Evernote</string>
