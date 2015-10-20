@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the current release version of Cyberduck and imports into FileWave.</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg.filewave.Cyberduck</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>Cyberduck</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.3.0</string>
+    <key>ParentRecipe</key>
+    <string>com.github.autopkg.download.Cyberduck</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Processor</key>
+            <string>Unarchiver</string>
+            <key>Arguments</key>
+            <dict>
+                <key>archive_path</key>
+                <string>%pathname%</string>
+                <key>destination_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%</string>
+                <key>purge_destination</key>
+                <true/>
+            </dict>
+        </dict>
+
+         <dict>
+            <key>Processor</key>
+            <string>PlistReader</string>
+            <key>Arguments</key>
+            <dict>
+                <key>info_path</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app</string>
+                <key>plist_keys</key>
+                <dict>
+                    <key>CFBundleIdentifier</key>
+                    <string>fw_app_bundle_id</string>
+                    <key>CFBundleShortVersionString</key>
+                    <string>fw_app_version</string>
+                </dict>
+            </dict>
+        </dict>
+
+        <dict>
+            <key>Processor</key>
+            <string>com.github.autopkg.filewave.FWTool/FileWaveImporter</string>
+            <key>Arguments</key>
+            <dict>
+                <key>fw_import_source</key>
+                <string>%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app</string>
+
+                <key>fw_fileset_name</key>
+                <string>%NAME% - %version%</string>
+
+                <key>fw_destination_root</key>
+                <string>/Applications/%NAME%.app</string>
+            </dict>
+        </dict>
+
+    </array>
+</dict>
+</plist>

@@ -22,7 +22,7 @@ Based on jamesz's work here: https://github.com/jamesez/automunki/tree/master/ad
     <array>
         <dict>
             <key>Comment</key>
-            <string>Import the pkg into FileWave</string>
+            <string>Import the Adobe AIR pkg into FileWave</string>
             <key>Processor</key>
             <string>com.github.autopkg.filewave.FWTool/FileWaveImporter</string>
             <key>Arguments</key>
