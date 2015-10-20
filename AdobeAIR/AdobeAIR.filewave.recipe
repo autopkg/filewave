@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Description</key>
+    <string>Downloads the latest Adobe AIR installer and repackages it for unattended, silent installation, then imports into FileWave.
+Based on jamesz's work here: https://github.com/jamesez/automunki/tree/master/adobe-air</string>
+    <key>Identifier</key>
+    <string>com.github.autopkg.filewave.AdobeAIR</string>
+    <key>Input</key>
+    <dict>
+        <key>NAME</key>
+        <string>AdobeAIR</string>
+        <key>URL</key>
+        <string>http://airdownload.adobe.com/air/mac/download/latest/AdobeAIR.dmg</string>
+    </dict>
+    <key>MinimumVersion</key>
+    <string>0.2.0</string>
+    <key>ParentRecipe</key>
+    <string>com.github.autopkg.pkg.AdobeAIR</string>
+    <key>Process</key>
+    <array>
+        <dict>
+            <key>Comment</key>
+            <string>Import the pkg into FileWave</string>
+            <key>Processor</key>
+            <string>com.github.autopkg.filewave.FWTool/FileWaveImporter</string>
+            <key>Arguments</key>
+            <dict>
+                <key>fw_app_bundle_id</key>
+                <string>com.github.autopkg.pkg.AdobeAIR</string>
+
+                <key>fw_app_version</key>
+                <string>%version%</string>
+
+                <key>fw_import_source</key>
+                <string>%pkg_path%</string>
+
+                <key>fw_fileset_name</key>
+                <string>%NAME% - %version%</string>
+
+                <key>fw_destination_root</key>
+                <string>/Applications/%NAME%.app</string>
+            </dict>
+        </dict>
+    </array>
+</dict>
+</plist>

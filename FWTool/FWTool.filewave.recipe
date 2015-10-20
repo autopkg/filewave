@@ -14,7 +14,7 @@
     </dict>
 
     <key>Identifier</key>
-    <string>com.github.johncclayton.filewave.FWTool</string>
+    <string>com.github.autopkg.filewave.FWTool</string>
 
     <key>MinimumVersion</key>
     <string>0.5.0</string>
@@ -23,7 +23,7 @@
 	<array>
         <dict>
             <key>Processor</key>
-            <string>com.github.johncclayton.filewave.FWTool/FWTool</string>
+            <string>com.github.autopkg.filewave.FWTool/FWTool</string>
         </dict>
     </array>
 </dict>

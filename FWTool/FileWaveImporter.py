@@ -129,18 +129,15 @@ class FileWaveImporter(FWTool):
         filename, file_extension = os.path.splitext(import_source)
 
         try:
-            if file_extension in [ "dmg" ] and find_type_in_dmg is not None:
+            if file_extension in [ ".dmg" ] and find_type_in_dmg is not None:
                 dmg_mountpoint = self.mount(import_source)
                 import_source = self.find_first_in_path(dmg_mountpoint, find_type_in_dmg)
                 file_extension = find_type_in_dmg
 
             try:
-
-
-                if file_extension in [ "pkg", "mpkg", "msi" ]:
+                if file_extension in [ ".pkg", ".mpkg", ".msi" ]:
                     fileset_id = self.client.import_package(path=import_source,
                                                        name=fileset_name,
-                                                       root=destination_root,
                                                        target=fileset_group)
                 elif os.path.isdir(import_source):
                     fileset_id = self.client.import_folder(path=import_source,
@@ -151,16 +148,19 @@ class FileWaveImporter(FWTool):
                 if FILEWAVE_SUMMARY_RESULT in self.env:
                     del self.env[FILEWAVE_SUMMARY_RESULT]
 
-                self.env[FILEWAVE_SUMMARY_RESULT] = {
-                    'summary_text': 'The following fileset was imported:',
-                    'report_fields': ['fw_fileset_id', 'fw_fileset_group', 'fw_fileset_name'],
-                    'data': {
-                        'fw_fileset_id': fileset_id,
-                        'fw_fileset_group': fileset_group if not None else "Root",
-                        'fw_fileset_name': fileset_name
-                    }}
+                if fileset_id is not None:
+                    self.env[FILEWAVE_SUMMARY_RESULT] = {
+                        'summary_text': 'The following fileset was imported:',
+                        'report_fields': ['fw_fileset_id', 'fw_fileset_group', 'fw_fileset_name'],
+                        'data': {
+                            'fw_fileset_id': fileset_id,
+                            'fw_fileset_group': fileset_group if fileset_group is not None else "Root",
+                            'fw_fileset_name': fileset_name
+                        }}
 
-                self.env['fw_fileset_id'] = fileset_id
+                    self.env['fw_fileset_id'] = fileset_id
+                else:
+                    raise Exception("No fileset imported (error calling FileWave Admin Command Line Console)")
 
                 if fileset_id is not None and check_version:
                     # re-write the props back into the fileset
@@ -168,8 +168,7 @@ class FileWaveImporter(FWTool):
                     self.client.set_property(fileset_id, "autopkg_app_version", fw_app_version)
 
             except Exception, e:
-                raise ProcessorError("Error importing the folder '%s' into FileWave \
-                                as a fileset called '%s', detail: %s" %
+                raise ProcessorError("Error importing the folder '%s' into FileWave as a fileset called '%s'.  Reason: %s" %
                                      (import_source, fileset_name, e))
 
         finally:

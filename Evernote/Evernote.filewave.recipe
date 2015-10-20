@@ -9,7 +9,7 @@ Alternate Beta URL that can be used for SPARKLE_FEED_URL:
 http://update.evernote.com/prerelease/ENMac/EvernoteMacUpdate.xml
 </string>
     <key>Identifier</key>
-    <string>com.github.johncclayton.filewave.Evernote</string>
+    <string>com.github.autopkg.filewave.Evernote</string>
     <key>Input</key>
     <dict>
         <key>NAME</key>
@@ -38,7 +38,7 @@ http://update.evernote.com/prerelease/ENMac/EvernoteMacUpdate.xml
         </dict>
         <dict>
             <key>Processor</key>
-            <string>com.github.johncclayton.filewave.FWTool/FileWaveImporter</string>
+            <string>com.github.autopkg.filewave.FWTool/FileWaveImporter</string>
             <key>Arguments</key>
             <dict>
                 <key>Comment</key>

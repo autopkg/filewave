@@ -122,11 +122,11 @@ class FWAdminClient(object):
 
         got_error = False
 
-        ret = None
+        self.run_result_ret = None
         try:
             if print_output:
                 print process_options
-            ret = subprocess.check_output(process_options, stderr=subprocess.STDOUT).rstrip()
+            self.run_result_ret = subprocess.check_output(process_options, stderr=subprocess.STDOUT).rstrip()
         except CalledProcessError as e:
             got_error = True
             if print_output:
@@ -135,12 +135,12 @@ class FWAdminClient(object):
             if not error_expected:
                 raise e
             else:
-                ret = e.output, e.returncode
+                self.run_result_ret = e.output, e.returncode
 
         if error_expected and not got_error:
             raise Exception("Expected an error, but command was successful")
 
-        return ret
+        return self.run_result_ret
 
     def get_version(self):
         version = self.run_admin("-v")
