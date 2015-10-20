@@ -14,8 +14,6 @@ http://update.evernote.com/prerelease/ENMac/EvernoteMacUpdate.xml
     <dict>
         <key>NAME</key>
         <string>Evernote</string>
-        <key>FW_FILESET_GROUP</key>
-        <string>Evernote for Desktop</string>
         <key>SPARKLE_FEED_URL</key>
         <string>http://update.evernote.com/public/ENMac/EvernoteMacUpdate.xml</string>
     </dict>
@@ -57,9 +55,6 @@ http://update.evernote.com/prerelease/ENMac/EvernoteMacUpdate.xml
 
                 <key>fw_fileset_name</key>
                 <string>%NAME% - %version%</string>
-
-                <key>fw_fileset_group</key>
-                <string>Mac Desktop</string>
 
                 <key>fw_destination_root</key>
                 <string>/Applications/%NAME%.app</string>
