@@ -1,44 +1,39 @@
-
-
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
-    <key>Description</key>
-    <string>Downloads Java 8 installer, imports into FileWave.</string>
-    <key>Identifier</key>
-    <string>com.github.autopkg.filewave.OracleJava8</string>
-    <key>Input</key>
-    <dict>
-        <key>NAME</key>
-        <string>Java</string>
-    </dict>
-    <key>MinimumVersion</key>
-    <string>0.2.9</string>
-    <key>ParentRecipe</key>
-    <string>com.github.autopkg.pkg.OracleJava8</string>
-    <key>Process</key>
-    <array>
-        <dict>
-            <key>Comment</key>
-            <string>Import the Java 8 pkg into FileWave</string>
-            <key>Processor</key>
-            <string>com.github.autopkg.filewave.FWTool/FileWaveImporter</string>
-            <key>Arguments</key>
-            <dict>
-                <key>fw_app_bundle_id</key>
-                <string>com.github.autopkg.filewave.OracleJava8</string>
-
-                <key>fw_app_version</key>
-                <string>%version%</string>
-
-                <key>fw_import_source</key>
-                <string>%pkg_path%</string>
-
-                <key>fw_fileset_name</key>
-                <string>%NAME% - %version%</string>
-            </dict>
-        </dict>
-    </array>
+	<key>Description</key>
+	<string>Downloads Java 8 installer, imports into FileWave.</string>
+	<key>Identifier</key>
+	<string>com.github.autopkg.filewave.OracleJava8</string>
+	<key>Input</key>
+	<dict>
+		<key>NAME</key>
+		<string>Java</string>
+	</dict>
+	<key>MinimumVersion</key>
+	<string>0.2.9</string>
+	<key>ParentRecipe</key>
+	<string>com.github.autopkg.pkg.OracleJava8</string>
+	<key>Process</key>
+	<array>
+		<dict>
+			<key>Arguments</key>
+			<dict>
+				<key>fw_app_bundle_id</key>
+				<string>com.github.autopkg.filewave.OracleJava8</string>
+				<key>fw_app_version</key>
+				<string>%version%</string>
+				<key>fw_fileset_name</key>
+				<string>%NAME% - %version%</string>
+				<key>fw_import_source</key>
+				<string>%pkg_path%</string>
+			</dict>
+			<key>Comment</key>
+			<string>Import the Java 8 pkg into FileWave</string>
+			<key>Processor</key>
+			<string>com.github.autopkg.filewave.FWTool/FileWaveImporter</string>
+		</dict>
+	</array>
 </dict>
 </plist>
