@@ -30,6 +30,7 @@ sys.path.append(os.path.dirname(__file__))
 from CommandLine import FWAdminClient
 from FWTool import COMMON_FILEWAVE_VARIABLES, FWTool
 
+__version__ = "0.0.1"
 FW_FILESET_DESTINATION = "/Applications"
 FILEWAVE_SUMMARY_RESULT = 'filewave_summary_result'
 
@@ -178,4 +179,3 @@ class FileWaveImporter(FWTool):
 if __name__ == '__main__':
     PROCESSOR = FileWaveImporter()
     PROCESSOR.execute_shell()
-
