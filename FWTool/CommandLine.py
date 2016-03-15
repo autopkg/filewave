@@ -126,7 +126,8 @@ class FWAdminClient(object):
         try:
             if print_output:
                 print process_options
-            self.run_result_ret = subprocess.check_output(process_options, stderr=subprocess.STDOUT).rstrip()
+            self.run_result_ret = subprocess.check_output(process_options,stderr=subprocess.STDOUT).rstrip()
+            self.run_result_ret = re.sub("QObject::connect.*QNetworkSession::State\)\n", '', self.run_result_ret)
         except CalledProcessError as e:
             got_error = True
             if print_output:
