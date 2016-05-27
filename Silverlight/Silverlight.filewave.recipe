@@ -14,6 +14,8 @@
 		<string>Silverlight</string>
 		<key>USER_AGENT</key>
 		<string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.28.10 (KHTML, like Gecko) Version/6.0.3 Safari/536.28.10</string>
+        <key>fw_fileset_group</key>
+        <string></string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.5.0</string>
@@ -65,7 +67,7 @@
 			<key>Arguments</key>
 			<dict>
 				<key>fw_fileset_group</key>
-				<string>Mac Desktop</string>
+				<string>%fw_fileset_group%</string>
 				<key>fw_fileset_name</key>
 				<string>%NAME% - %fw_app_version%</string>
 				<key>fw_import_source</key>

@@ -10,6 +10,12 @@
 	<dict>
 		<key>NAME</key>
 		<string>AdobeFlashPlayer</string>
+        <key>fw_app_bundle_id</key>
+        <string>com.github.autopkg.filewave.FlashPlayerNoRepackage</string>
+        <key>fw_app_version</key>
+        <string>%version%</string>
+        <key>fw_fileset_group</key>
+        <string></string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.2.0</string>
@@ -21,13 +27,15 @@
 			<key>Arguments</key>
 			<dict>
 				<key>fw_app_bundle_id</key>
-				<string>com.github.autopkg.filewave.FlashPlayerNoRepackage</string>
+				<string>%fw_app_bundle_id%</string>
 				<key>fw_app_version</key>
-				<string>%version%</string>
+				<string>%fw_app_version%</string>
 				<key>fw_fileset_name</key>
 				<string>%NAME% - %version%</string>
 				<key>fw_import_source</key>
 				<string>%pkg_path%</string>
+                <key>fw_fileset_group</key>
+                <string>%fw_fileset_group%</string>
 			</dict>
 			<key>Comment</key>
 			<string>Import the Flash Player pkg into FileWave</string>

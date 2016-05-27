@@ -10,6 +10,10 @@
 	<dict>
 		<key>NAME</key>
 		<string>Cyberduck</string>
+        <key>fw_fileset_group</key>
+        <string></string>
+        <key>fw_destination_root</key>
+        <string>/Applications/%NAME%.app</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.3.0</string>
@@ -50,11 +54,13 @@
 			<key>Arguments</key>
 			<dict>
 				<key>fw_destination_root</key>
-				<string>/Applications/%NAME%.app</string>
+				<string>%fw_destination_root%</string>
 				<key>fw_fileset_name</key>
 				<string>%NAME% - %version%</string>
 				<key>fw_import_source</key>
 				<string>%RECIPE_CACHE_DIR%/%NAME%/%NAME%.app</string>
+                <key>fw_fileset_group</key>
+                <string>%fw_fileset_group%</string>
 			</dict>
 			<key>Processor</key>
 			<string>com.github.autopkg.filewave.FWTool/FileWaveImporter</string>
