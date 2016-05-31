@@ -25,9 +25,9 @@ Command Line from the Terminal, for example:
 
 ## Configuration
 The recipes and processors need to know where the FileWave Server is located, as well
-as which user / password combo to use when uploading packages.
+as which user / password to use when logging in and uploading packages.
   
-To do this, the following variables can be used:
+To do this, the following autopkg (defaults command) variables can be used:
 
 1. FW_SERVER_HOST - defaults to 'localhost', can be hostname or IP address
 1. FW_SERVER_PORT - defaults to 20016
@@ -42,7 +42,7 @@ For example:
 By default the recipes will assume you have a pristine FileWave installation 
 which means you have a single FileWave administrator account called 'fwadmin'
 and the password is 'password'.  These are good defaults to ensure a quick 
-start in testing situations - but in production you really really want to 
+start in testing situations - but in production you *really really* want to 
 change this.
 
 For security reasons - we *strongly* recommend creating another user 
@@ -55,11 +55,13 @@ indicating that you are making use of the super-user account.
 FileWave is multi-user capable.  
 
 Take advantage of this and create a user called 'autopkg' and give this 
-user the following rights (DO NOT provide update model rights): 
+user the following rights (optionally provide update model rights if you want to make
+use of the --updateModel feature of the Admin CLI): 
  - Modify Clients/Groups
  - Modify Filesets
  - Modify Associations
  - Modify Imaging Associations
+ - [optional] Update Model
   
 Then on the machine running autopkg, set the FW_ADMIN_USER value:
 
