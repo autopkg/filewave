@@ -17,6 +17,8 @@ preflight script, looking to find a user's trash folder to copy the .app into.
 	<dict>
 		<key>NAME</key>
 		<string>Adobe Reader</string>
+        <key>fw_destination_root</key>
+        <string>/Applications/Adobe Reader.app</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.2.0</string>
@@ -80,8 +82,6 @@ preflight script, looking to find a user's trash folder to copy the .app into.
 		<dict>
 			<key>Arguments</key>
 			<dict>
-				<key>fw_destination_root</key>
-				<string>/Applications/Adobe Reader.app</string>
 				<key>fw_fileset_name</key>
 				<string>%NAME% - %fw_app_version%</string>
 				<key>fw_import_source</key>

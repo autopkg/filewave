@@ -10,6 +10,8 @@
 	<dict>
 		<key>NAME</key>
 		<string>Google Earth</string>
+        <key>fw_destination_root</key>
+        <string>/Applications/%NAME%.app</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.2.0</string>
@@ -58,8 +60,6 @@
 				<string>%bundleid%</string>
 				<key>fw_app_version</key>
 				<string>%version%</string>
-				<key>fw_destination_root</key>
-				<string>/Applications/%NAME%.app</string>
 				<key>fw_fileset_name</key>
 				<string>%NAME% - %version%</string>
 				<key>fw_import_source</key>
