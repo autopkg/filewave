@@ -13,6 +13,10 @@ Based on jamesz's work here: https://github.com/jamesez/automunki/tree/master/ad
 		<string>AdobeAIR</string>
 		<key>URL</key>
 		<string>http://airdownload.adobe.com/air/mac/download/latest/AdobeAIR.dmg</string>
+        <key>fw_app_bundle_id</key>
+        <string>com.github.autopkg.pkg.AdobeAIR</string>
+        <key>fw_destination_root</key>
+        <string>/Applications/%NAME%.app</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.2.0</string>
@@ -23,12 +27,8 @@ Based on jamesz's work here: https://github.com/jamesez/automunki/tree/master/ad
 		<dict>
 			<key>Arguments</key>
 			<dict>
-				<key>fw_app_bundle_id</key>
-				<string>com.github.autopkg.pkg.AdobeAIR</string>
 				<key>fw_app_version</key>
 				<string>%version%</string>
-				<key>fw_destination_root</key>
-				<string>/Applications/%NAME%.app</string>
 				<key>fw_fileset_name</key>
 				<string>%NAME% - %version%</string>
 				<key>fw_import_source</key>
