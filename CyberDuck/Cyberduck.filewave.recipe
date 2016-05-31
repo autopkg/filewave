@@ -10,6 +10,8 @@
 	<dict>
 		<key>NAME</key>
 		<string>Cyberduck</string>
+        <key>fw_destination_root</key>
+        <string>/Applications/%NAME%.app</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.3.0</string>
@@ -49,8 +51,6 @@
 		<dict>
 			<key>Arguments</key>
 			<dict>
-				<key>fw_destination_root</key>
-				<string>/Applications/%NAME%.app</string>
 				<key>fw_fileset_name</key>
 				<string>%NAME% - %version%</string>
 				<key>fw_import_source</key>
