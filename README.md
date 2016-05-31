@@ -112,14 +112,14 @@ exist in the recipe in order for you to override it - and we'll use this trick t
 First, lets see what info we've got about the Adium recipe.
 
     $ autopkg info Adium.filewave
-Description:         Downloads latest version of Adium and imports into FileWave.
-Identifier:          com.github.autopkg.filewave.Adium
-Munki import recipe: False
-Has check phase:     True
-Builds package:      False
-Recipe file path:    /Users/johnc/Library/AutoPkg/RecipeRepos/com.github.filewave/Adium/Adium.filewave.recipe
-Parent recipe(s):    /Users/johnc/Library/AutoPkg/RecipeRepos/com.github.autopkg.recipes/Adium/Adium.download.recipe
-Input values: 
+    Description:         Downloads latest version of Adium and imports into FileWave.
+    Identifier:          com.github.autopkg.filewave.Adium
+    Munki import recipe: False
+    Has check phase:     True
+    Builds package:      False
+    Recipe file path:    /Users/johnc/Library/AutoPkg/RecipeRepos/com.github.filewave/Adium/Adium.filewave.recipe
+    Parent recipe(s):    /Users/johnc/Library/AutoPkg/RecipeRepos/com.github.autopkg.recipes/Adium/Adium.download.recipe
+    Input values: 
  
     BRANCH = release;
     NAME = Adium;
@@ -127,15 +127,15 @@ Input values:
     "fw_destination_root" = "/Applications/%NAME%.app";
 
 
-Note the *Input values* section, it shows us BRANCH, NAME and two filewave specific parameters. Notice the 'fw_fileset_group' parameter is NOT listed here.  
+Note the *Input values* section, it shows us BRANCH, NAME and two filewave specific parameters. Notice the 
+'fw_fileset_group' parameter is NOT listed here.  
 
 Lets go ahead and create an override and then set the fw_fileset_group paramter to something.
 
     $ autopkg make-override Evernote.filewave
     Override file saved to /Users/johnc/Library/AutoPkg/RecipeOverrides/Adium.filewave.recipe
     
-
-Now edit this XML file and make it look like this: 
+Now lets edit this XML file and make it look like this: 
 ```
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
@@ -153,6 +153,7 @@ Now edit this XML file and make it look like this:
                 <string>com.github.autopkg.filewave.Adium</string>
                 <key>fw_destination_root</key>
                 <string>/Applications/%NAME%.app</string>
+                <!-- added the fw_fileset_group -->
                 <key>fw_fileset_group</key>
                 <string>My New Group for Adium</string>
         </dict>
@@ -162,10 +163,11 @@ Now edit this XML file and make it look like this:
 </plist>
 ```
 
-The thing to note here is that we've added the <key>fw_fileset_group</key> and its associated <string> value
-into the input variables dictionary. 
+Notice that we've added the <key>fw_fileset_group</key> and its associated <string> value
+into the input variables dictionary.  It isn't important that this key is not specified by the
+original recipe - the FileWaveImporter will still look for and find the value you specify.
 
-That's all!  Done!  Now when we run the autopkg recipe for Adium, the right group override is used.
+That's it!  Now when we run the autopkg recipe for Adium, the right group override is used.
 
     $ autopkg run Adium.filewave
     Processing Adium.filewave...
@@ -174,7 +176,6 @@ That's all!  Done!  Now when we run the autopkg recipe for Adium, the right grou
     Fw Fileset Id  Fw Fileset Group        Fw Fileset Name   
     -------------  ----------------        ---------------   
     73533          My New Group for Adium  Adium - 1.5.10.2  
-
 
 Happy Autopkging!
 
