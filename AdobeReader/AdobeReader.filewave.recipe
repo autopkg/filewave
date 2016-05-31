@@ -17,6 +17,10 @@ preflight script, looking to find a user's trash folder to copy the .app into.
 	<dict>
 		<key>NAME</key>
 		<string>Adobe Reader</string>
+        <key>fw_fileset_group</key>
+        <string>%fw_fileset_group%</string>
+        <key>fw_destination_root</key>
+        <string>/Applications/Adobe Reader.app</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.2.0</string>
@@ -81,11 +85,13 @@ preflight script, looking to find a user's trash folder to copy the .app into.
 			<key>Arguments</key>
 			<dict>
 				<key>fw_destination_root</key>
-				<string>/Applications/Adobe Reader.app</string>
+				<string>%fw_destination_root%</string>
 				<key>fw_fileset_name</key>
 				<string>%NAME% - %fw_app_version%</string>
 				<key>fw_import_source</key>
 				<string>%RECIPE_CACHE_DIR%/application_payload/Applications/Adobe Reader.app</string>
+                <key>fw_fileset_group</key>
+                <string>%fw_fileset_group%</string>
 			</dict>
 			<key>Comment</key>
 			<string>Import the Adobe Reader app into FileWave</string>
