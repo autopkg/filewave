@@ -3,16 +3,11 @@
 <plist version="1.0">
 <dict>
 	<key>Description</key>
-	<string>Validates that the FileWave recipe setup is correct, and provides
-    a placeholder to put the Processors required for FileWave recipes.
-    </string>
+	<string>Validates that the FileWave recipe setup is correct, and provides a placeholder to put the Processors required for FileWave recipes.</string>
 	<key>Identifier</key>
 	<string>com.github.autopkg.filewave.FWTool</string>
 	<key>Input</key>
-	<dict>
-		<key>SPARKLE_FEED_URL</key>
-		<string>http://update.evernote.com/public/ENMac/EvernoteMacUpdate.xml</string>
-	</dict>
+	<dict/>
 	<key>MinimumVersion</key>
 	<string>0.5.0</string>
 	<key>Process</key>
