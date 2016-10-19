@@ -35,39 +35,42 @@ DEFAULT_FW_ADMIN_USERNAME = "fwadmin"
 DEFAULT_FW_ADMIN_PASSWORD = "filewave"
 
 COMMON_FILEWAVE_VARIABLES = {
-        "FW_SERVER_HOST": {
-            "default": DEFAULT_FW_SERVER_HOST,
-            "description": ("The hostname/ip of the FileWave server.  Defaults to %s"
-                           % DEFAULT_FW_SERVER_HOST),
-            "required": False,
-        },
-        "FW_SERVER_PORT": {
-            "default": DEFAULT_FW_SERVER_PORT,
-            "description": ("The port number of the FileWave server.  Defaults to %s"
-                            % DEFAULT_FW_SERVER_PORT),
-            "required": False,
-        },
-        "FW_ADMIN_USER": {
-            "default": DEFAULT_FW_ADMIN_USERNAME,
-            "description": ("The username to use when connecting to the FileWave server.  Defaults to %s"
-                            % DEFAULT_FW_ADMIN_USERNAME),
-            "required": False,
-        },
-        "FW_ADMIN_PASSWORD": {
-            "default": DEFAULT_FW_ADMIN_PASSWORD,
-            "description": ("The password to use when connecting to the FileWave server.  Defaults to %s"
-                            % DEFAULT_FW_ADMIN_PASSWORD),
-            "required": False,
-        },
-        "FW_RELAX_VERSION": {
-            "default": False,
-            "description": "Relax the version check and continue on regardless",
-            "required": False
-        }
+    "FW_SERVER_HOST": {
+        "default": DEFAULT_FW_SERVER_HOST,
+        "description": ("The hostname/ip of the FileWave server.  Defaults to "
+                        "%s" % DEFAULT_FW_SERVER_HOST),
+        "required": False,
+    },
+    "FW_SERVER_PORT": {
+        "default": DEFAULT_FW_SERVER_PORT,
+        "description": ("The port number of the FileWave server.  Defaults to "
+                        "%s" % DEFAULT_FW_SERVER_PORT),
+        "required": False,
+    },
+    "FW_ADMIN_USER": {
+        "default": DEFAULT_FW_ADMIN_USERNAME,
+        "description": ("The username to use when connecting to the FileWave "
+                        "server.  Defaults to %s" % DEFAULT_FW_ADMIN_USERNAME),
+        "required": False,
+    },
+    "FW_ADMIN_PASSWORD": {
+        "default": DEFAULT_FW_ADMIN_PASSWORD,
+        "description": ("The password to use when connecting to the FileWave "
+                        "server.  Defaults to %s" % DEFAULT_FW_ADMIN_PASSWORD),
+        "required": False,
+    },
+    "FW_RELAX_VERSION": {
+        "default": False,
+        "description": "Relax the version check and continue on regardless",
+        "required": False
+    }
 }
 
+
 class FWTool(DmgMounter):
-    """Validates that the FileWave Admin Command Line tools are available on this machine."""
+    """Validates that the FileWave Admin Command Line tools are available on
+    this machine.
+    """
 
     description = __doc__
 
@@ -100,9 +103,13 @@ class FWTool(DmgMounter):
         self.major, self.minor, self.patch = self.version.split('.')
         if int(self.major) < 10:
             if self.relaxed_version_check:
-                self.output("FileWave Version 10.0 must be installed - you have version %s" % (self.version))
+                self.output(
+                    "FileWave Version 10.0 must be installed - you have "
+                    "version %s" % (self.version))
             else:
-                raise ProcessorError("FileWave Version 10.0 must be installed - you have version %s" % (self.version))
+                raise ProcessorError(
+                    "FileWave Version 10.0 must be installed - you have "
+                    "version %s" % (self.version))
 
         self.can_list_filesets = "No"
         self.exit_status_message = "VALIDATION OK"
@@ -114,12 +121,15 @@ class FWTool(DmgMounter):
             self.can_list_filesets = "Yes" if count_filesets >= 0 else "No"
         except CalledProcessError, e:
             self.exception = e
-            self.exit_status_message = FWAdminClient.ExitStatusDescription[e.returncode][1]
+            self.exit_status_message = FWAdminClient.ExitStatusDescription[
+                e.returncode][1]
         except Exception, e:
             self.exception = e
 
         if self.env['FW_ADMIN_USER'] == 'fwadmin':
-            self.output("WARNING: You are using the FileWave super-user account (fwadmin)")
+            self.output(
+                "WARNING: You are using the FileWave super-user account "
+                "(fwadmin)")
 
     def main(self):
         self.validate_tools(print_path=True)
@@ -151,4 +161,3 @@ class FWTool(DmgMounter):
 if __name__ == '__main__':
     PROCESSOR = FWTool()
     PROCESSOR.execute_shell()
-

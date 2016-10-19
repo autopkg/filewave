@@ -16,24 +16,39 @@
 
 import subprocess
 from subprocess import CalledProcessError
-import re, os
+import re
+import os
 import json
 import platform
 import os.path
 
+
 class Client(object):
-    def __init__(self, id, name, type, parent_id, **kwargs):
+
+    def __init__(self,
+                 id,
+                 name,
+                 type,
+                 parent_id,
+                 **kwargs):
         self.id = str(id)
         self.name = name
         self.type = type
         self.parent_id = str(parent_id)
 
     def __str__(self):
-        return "%s (%s) '%s', parent=%s" % (self.id, self.name, self.type, self.parent_id)
+        return "%s (%s) '%s', parent=%s" % (self.id, self.name, self.type,
+                                            self.parent_id)
 
 
 class Association(object):
-    def __init__(self, assoc_id, client_id, fileset_id, kiosk=False, sw_update=False):
+
+    def __init__(self,
+                 assoc_id,
+                 client_id,
+                 fileset_id,
+                 kiosk=False,
+                 sw_update=False):
         self.id = str(assoc_id)
         self.client_id = str(client_id)
         self.fileset_id = str(fileset_id)
@@ -50,7 +65,15 @@ class Association(object):
 
 
 class Fileset(object):
-    def __init__(self, id, name, type, size, parent_id, custom_properties=None, **kwargs):
+
+    def __init__(self,
+                 id,
+                 name,
+                 type,
+                 size,
+                 parent_id,
+                 custom_properties=None,
+                 **kwargs):
         self.id = str(id)
         self.name = name
         self.type = type
@@ -58,7 +81,6 @@ class Fileset(object):
         self.custom_properties = custom_properties
         self.parent_id = str(parent_id)
         self.is_critical = kwargs.get('isCritical')
-
 
     def __str__(self):
         return "%s - name: %s, type: %s, parent: %s, props: %s" % (
@@ -68,6 +90,7 @@ class Fileset(object):
             self.parent_id,
             self.custom_properties
         )
+
 
 class FWAdminClient(object):
 
@@ -83,19 +106,21 @@ class FWAdminClient(object):
         107: ("kExitModelUpdateError", "Error while updating the model"),
         108: ("kExitLoginError", "Login Error or Version Mismatch"),
         109: ("kExitImportFilesetError", "Error while importing a fileset"),
-        110: ("kExitUnknownImportType", "Package type not supported for import"),
+        110: ("kExitUnknownImportType", "Package type not supported for "
+              "import"),
         111: ("kExitParseError", "Command line parse failed"),
-        112: ("kExitAssociationToImagingFilesetError", "Can't create association with an imaging fileset"),
+        112: ("kExitAssociationToImagingFilesetError", "Can't create "
+              "association with an imaging fileset"),
         113: ("kExitGroupCreationError", "Can't create a new fileset group"),
         114: ("kExitFilesetMergeError", "Cannot merge files in the fileset"),
         115: ("kExitExportFilesetError", "Error while exporting a fileset"),
     }
 
     def __init__(self,
-                 admin_name = 'fwadmin',
-                 admin_pwd = 'filewave',
-                 server_host = 'localhost',
-                 server_port = "20016",
+                 admin_name='fwadmin',
+                 admin_pwd='filewave',
+                 server_host='localhost',
+                 server_port="20016",
                  create_fs_callback=None,
                  remove_fs_callback=None,
                  export_fs_callback=None,
@@ -105,7 +130,7 @@ class FWAdminClient(object):
         self.connection_options = ['-u', admin_name,
                                    '-p', admin_pwd,
                                    '-H', server_host,
-                                   '-P', server_port ]
+                                   '-P', server_port]
 
         self.print_output = print_output
         self.create_fs_callback = create_fs_callback
@@ -123,7 +148,7 @@ class FWAdminClient(object):
         elif 'Linux' == systemName:
             appPath = '%s/FileWaveAdmin'
         else:
-            raise Exception( 'Unsupported platform' )
+            raise Exception('Unsupported platform')
 
         return appPath % cls.get_executable_path()
 
@@ -131,7 +156,8 @@ class FWAdminClient(object):
     def get_executable_path(cls):
         return os.environ.get("FILEWAVE_ADMIN_PATH", '/Applications/FileWave')
 
-    def run_admin(self, options, include_connection_options=True, error_expected=False, print_output=None):
+    def run_admin(self, options, include_connection_options=True,
+                  error_expected=False, print_output=None):
         print_output = print_output or self.print_output
         process_options = [self.fwadmin_executable]
         if include_connection_options:
@@ -148,8 +174,11 @@ class FWAdminClient(object):
             if print_output:
                 print process_options
 
-            self.run_result_ret = subprocess.check_output(process_options, stderr=subprocess.STDOUT).rstrip()
-            self.run_result_ret = re.sub("QObject::connect.*QNetworkSession::State\)\n", '', self.run_result_ret)
+            self.run_result_ret = subprocess.check_output(
+                process_options, stderr=subprocess.STDOUT).rstrip()
+            self.run_result_ret = re.sub(
+                "QObject::connect.*QNetworkSession::State\)\n", '',
+                self.run_result_ret)
 
         except CalledProcessError as e:
             got_error = True
@@ -204,8 +233,10 @@ class FWAdminClient(object):
         for assoc in associations:
             yield Association(**assoc)
 
-    def create_association(self, client_id, fileset_id, kiosk=False, sw_update=False, error_expected=False ):
-        args = ['--createAssociation', '--clientgroup', client_id, '--fileset', fileset_id]
+    def create_association(self, client_id, fileset_id, kiosk=False,
+                           sw_update=False, error_expected=False):
+        args = ['--createAssociation', '--clientgroup',
+                client_id, '--fileset', fileset_id]
         if kiosk:
             args.append('--kiosk')
 
@@ -233,18 +264,21 @@ class FWAdminClient(object):
         matcher = re.compile(r'new fileset with ID (?P<id>.+) was created')
         search = matcher.search(import_folder_result)
         id = search.group('id')
-        if self.create_fs_callback and hasattr(self.create_fs_callback, '__call__'):
+        if self.create_fs_callback and hasattr(self.create_fs_callback,
+                                               '__call__'):
             self.create_fs_callback(id)
         return id
 
     def export_fileset(self, destination, fs_name):
-        options = [ '--exportFileset', destination, '--fileset', fs_name ]
+        options = ['--exportFileset', destination, '--fileset', fs_name]
         export_result = self.run_admin(options)
-        matcher = re.compile(r'the fileset with ID (?P<id>.+) was exported to \'(?P<to>.+)\'')
+        matcher = re.compile(
+            r'the fileset with ID (?P<id>.+) was exported to \'(?P<to>.+)\'')
         search = matcher.search(export_result)
         id = search.group('id')
         dest = search.group('to')
-        if self.export_fs_callback and hasattr(self.export_fs_callback, '__call__'):
+        if self.export_fs_callback and hasattr(self.export_fs_callback,
+                                               '__call__'):
             self.export_fs_callback(id, dest)
         return id
 
@@ -261,17 +295,21 @@ class FWAdminClient(object):
         matcher = re.compile(r'new fileset with ID (?P<id>.+) was created')
         search = matcher.search(import_folder_result)
         id = search.group('id')
-        if self.create_fs_callback and hasattr(self.create_fs_callback, '__call__'):
+        if self.create_fs_callback and hasattr(self.create_fs_callback,
+                                               '__call__'):
             self.create_fs_callback(id)
         return id
 
     def import_image(self, path, error_expected=False):
         options = ['--importImage', path]
-        import_image_result = self.run_admin( options, error_expected=error_expected )
-        matcher = re.compile( r'new imaging fileset with ID (?P<id>.+) was created')
+        import_image_result = self.run_admin(
+            options, error_expected=error_expected)
+        matcher = re.compile(
+            r'new imaging fileset with ID (?P<id>.+) was created')
         search = matcher.search(import_image_result)
         id = search.group('id')
-        if self.create_fs_callback and hasattr(self.create_fs_callback, '__call__'):
+        if self.create_fs_callback and hasattr(self.create_fs_callback,
+                                               '__call__'):
             self.create_fs_callback(id)
         return id
 
@@ -288,22 +326,26 @@ class FWAdminClient(object):
         matcher = re.compile(r'new fileset with ID (?P<id>.+) was created')
         search = matcher.search(import_package_result)
         id = search.group('id')
-        if self.create_fs_callback and hasattr(self.create_fs_callback, '__call__'):
+        if self.create_fs_callback and hasattr(self.create_fs_callback,
+                                               '__call__'):
             self.create_fs_callback(id)
         return id
 
     def set_property(self, fileset_id, prop_name, prop_value):
-        options = ['--fileset', fileset_id, '--setProperty', '--key', prop_name, '--value', prop_value]
+        options = ['--fileset', fileset_id, '--setProperty',
+                   '--key', prop_name, '--value', prop_value]
         self.run_admin(options)
 
     def remove_fileset(self, fileset_id):
         self.run_admin(['--deleteFileset', str(fileset_id)])
-        if self.remove_fs_callback and hasattr(self.remove_fs_callback, '__call__'):
+        if self.remove_fs_callback and hasattr(self.remove_fs_callback,
+                                               '__call__'):
             self.remove_fs_callback(fileset_id)
         return fileset_id
 
     def set_fileset_critical(self, fileset_id, is_critical):
-        options = ['--fileset', fileset_id, '--setCriticalFlag',  '--value', "1" if is_critical else "0"]
+        options = ['--fileset', fileset_id, '--setCriticalFlag',
+                   '--value', "1" if is_critical else "0"]
         self.run_admin(options)
 
     def model_update(self):
@@ -315,9 +357,11 @@ class FWAdminClient(object):
             options.extend(["--filesetgroup", str(target)])
         create_empty_fileset_result = self.run_admin(options)
         print create_empty_fileset_result
-        matcher = re.compile(r'new fileset (?P<id>.+) created with name (?P<name>.+)')
+        matcher = re.compile(
+            r'new fileset (?P<id>.+) created with name (?P<name>.+)')
         search = matcher.search(create_empty_fileset_result)
         id = search.group('id')
-        if self.create_fs_callback and hasattr(self.create_fs_callback, '__call__'):
+        if self.create_fs_callback and hasattr(self.create_fs_callback,
+                                               '__call__'):
             self.create_fs_callback(id)
         return id
