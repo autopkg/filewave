@@ -8,84 +8,31 @@
 	<string>com.github.autopkg.filewave.Silverlight</string>
 	<key>Input</key>
 	<dict>
-		<key>DOWNLOAD_URL</key>
-		<string>http://www.microsoft.com/getsilverlight/handlers/getsilverlight.ashx</string>
 		<key>NAME</key>
 		<string>Silverlight</string>
 		<key>USER_AGENT</key>
 		<string>Mozilla/5.0 (Macintosh; Intel Mac OS X 10_8_3) AppleWebKit/536.28.10 (KHTML, like Gecko) Version/6.0.3 Safari/536.28.10</string>
+		<key>fw_app_bundle_id</key>
+		<string>com.github.autopkg.filewave.Silverlight</string>
 	</dict>
 	<key>MinimumVersion</key>
-	<string>0.5.0</string>
+	<string>0.6.0</string>
 	<key>ParentRecipe</key>
-	<string>com.github.autopkg.download.Silverlight</string>
+	<string>com.github.autopkg.pkg.Silverlight</string>
 	<key>Process</key>
 	<array>
 		<dict>
 			<key>Arguments</key>
 			<dict>
-				<key>destination_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%/flatpkg</string>
-				<key>flat_pkg_path</key>
-				<string>%pathname%/Silverlight.pkg</string>
-				<key>purge_destination</key>
-				<true/>
-			</dict>
-			<key>Processor</key>
-			<string>FlatPkgUnpacker</string>
-		</dict>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>extract_root</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%/flatpkg/plugin_extract</string>
-				<key>pkg_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%/flatpkg/silverlight_plugin.pkg</string>
-			</dict>
-			<key>Processor</key>
-			<string>PkgExtractor</string>
-		</dict>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>info_path</key>
-				<string>%RECIPE_CACHE_DIR%/%NAME%/flatpkg/plugin_extract/PackageInfo</string>
-				<key>plist_keys</key>
-				<dict>
-					<key>CFBundleIdentifier</key>
-					<string>fw_app_bundle_id</string>
-					<key>CFBundleShortVersionString</key>
-					<string>fw_app_version</string>
-				</dict>
-			</dict>
-			<key>Processor</key>
-			<string>PlistReader</string>
-		</dict>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>fw_fileset_group</key>
-				<string>Mac Desktop</string>
+				<key>fw_app_version</key>
+				<string>%version%</string>
 				<key>fw_fileset_name</key>
-				<string>%NAME% - %fw_app_version%</string>
+				<string>%NAME% - %version%</string>
 				<key>fw_import_source</key>
-				<string>%flat_pkg_path%</string>
+				<string>%pkg_path%</string>
 			</dict>
 			<key>Processor</key>
 			<string>com.github.autopkg.filewave.FWTool/FileWaveImporter</string>
-		</dict>
-		<dict>
-			<key>Arguments</key>
-			<dict>
-				<key>destination_path</key>
-				<array>
-					<string>%RECIPE_CACHE_DIR%/%NAME%/flatpkg</string>
-				</array>
-				<key>path_list</key>
-				<string></string>
-			</dict>
-			<key>Processor</key>
-			<string>PathDeleter</string>
 		</dict>
 	</array>
 </dict>
