@@ -11,7 +11,7 @@
 		<key>NAME</key>
 		<string>Google Chrome</string>
         <key>fw_destination_root</key>
-        <string>/Applications/%NAME%.app</string>
+        <string>/Applications/Google Chrome.app</string>
 	</dict>
 	<key>MinimumVersion</key>
 	<string>0.2.0</string>
