@@ -14,6 +14,8 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 """See docstring for FileWaveImporter class"""
+from __future__ import absolute_import
+from __future__ import print_function
 from autopkglib import Processor, ProcessorError
 from distutils.version import LooseVersion, StrictVersion
 import glob
@@ -110,8 +112,8 @@ class FileWaveImporter(FWTool):
 
                 if app_bundle_id == fw_app_bundle_id and \
                                 LooseVersion(app_version) >= LooseVersion(fw_app_version):
-                    print "This app version is already satisfied by the fileset %s called '%s' (%s, %s)" %\
-                          (fileset.id, fileset.name, fw_app_bundle_id, fw_app_version )
+                    print("This app version is already satisfied by the fileset %s called '%s' (%s, %s)" %\
+                          (fileset.id, fileset.name, fw_app_bundle_id, fw_app_version ))
                     return
 
         import_source = self.env['fw_import_source']
@@ -168,7 +170,7 @@ class FileWaveImporter(FWTool):
                     self.client.set_property(fileset_id, "autopkg_app_bundle_id", fw_app_bundle_id)
                     self.client.set_property(fileset_id, "autopkg_app_version", fw_app_version)
 
-            except Exception, e:
+            except Exception as e:
                 raise ProcessorError("Error importing the folder '%s' into FileWave as a fileset called '%s'.  Reason: %s" %
                                      (import_source, fileset_name, e))
 
