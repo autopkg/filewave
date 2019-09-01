@@ -122,6 +122,13 @@ class FWAdminClient(object):
         process_options = [self.fwadmin_executable]
         if include_connection_options:
             process_options.extend(self.connection_options)
+
+        # Map string type for both Python 2 and Python 3.
+        try:
+            _ = basestring
+        except NameError:
+            basestring = str  # pylint: disable=W0622
+
         if isinstance(options, basestring):
             process_options.append(options)
         else:
