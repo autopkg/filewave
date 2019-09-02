@@ -117,7 +117,7 @@ class FWTool(DmgMounter):
         except CalledProcessError as e:
             self.exception = e
             self.exit_status_message = FWAdminClient.ExitStatusDescription[e.returncode][1]
-        except Exception as e:
+        except BaseException as e:
             self.exception = e
 
         if self.env['FW_ADMIN_USER'] == 'fwadmin':
