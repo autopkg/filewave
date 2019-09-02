@@ -1,11 +1,13 @@
-from __future__ import absolute_import
-from __future__ import print_function
+from __future__ import absolute_import, print_function
+
+import json
+import os
+import os.path
+import platform
+import re
 import subprocess
 from subprocess import CalledProcessError
-import re, os
-import json
-import platform
-import os.path
+
 
 class Client(object):
     def __init__(self, id, name, type, parent_id, **kwargs):

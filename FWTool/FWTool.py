@@ -15,14 +15,14 @@
 # limitations under the License.
 
 """See docstring for FWTool class"""
-from __future__ import absolute_import
-from __future__ import print_function
-from autopkglib import DmgMounter, Processor, ProcessorError
+from __future__ import absolute_import, print_function
 
 import os
 import os.path
-from subprocess import CalledProcessError
 import sys
+from subprocess import CalledProcessError
+
+from autopkglib import DmgMounter, Processor, ProcessorError
 
 # Ensure that the FWAdminClient can be imported from CommandLine module, since
 # this Processor was imported via autopkg explicitly, the directory is not in
@@ -153,4 +153,3 @@ class FWTool(DmgMounter):
 if __name__ == '__main__':
     PROCESSOR = FWTool()
     PROCESSOR.execute_shell()
-
