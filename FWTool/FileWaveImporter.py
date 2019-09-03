@@ -170,7 +170,7 @@ class FileWaveImporter(FWTool):
                     self.client.set_property(fileset_id, "autopkg_app_bundle_id", fw_app_bundle_id)
                     self.client.set_property(fileset_id, "autopkg_app_version", fw_app_version)
 
-            except BaseException as e:
+            except Exception as e:
                 raise ProcessorError("Error importing the folder '%s' into FileWave as a fileset called '%s'.  Reason: %s" %
                                      (import_source, fileset_name, e))
 
