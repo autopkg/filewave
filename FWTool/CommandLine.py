@@ -143,7 +143,7 @@ class FWAdminClient(object):
             if print_output:
                 print(process_options)
 
-            self.run_result_ret = subprocess.check_output(process_options, stderr=subprocess.STDOUT).rstrip()
+            self.run_result_ret = subprocess.check_output(process_options, stderr=subprocess.STDOUT).decode().rstrip()
             self.run_result_ret = re.sub(r"QObject::connect.*QNetworkSession::State\)\n", '', self.run_result_ret)
             self.run_result_ret = re.sub(r"qt.network.ssl: Error receiving trust for a CA certificate\n", '', self.run_result_ret)
 
