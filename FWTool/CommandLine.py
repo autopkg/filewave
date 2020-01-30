@@ -1,9 +1,13 @@
+from __future__ import absolute_import, print_function
+
+import json
+import os
+import os.path
+import platform
+import re
 import subprocess
 from subprocess import CalledProcessError
-import re, os
-import json
-import platform
-import os.path
+
 
 class Client(object):
     def __init__(self, id, name, type, parent_id, **kwargs):
@@ -120,6 +124,13 @@ class FWAdminClient(object):
         process_options = [self.fwadmin_executable]
         if include_connection_options:
             process_options.extend(self.connection_options)
+
+        # Map string type for both Python 2 and Python 3.
+        try:
+            _ = basestring
+        except NameError:
+            basestring = str  # pylint: disable=W0622
+
         if isinstance(options, basestring):
             process_options.append(options)
         else:
@@ -130,17 +141,17 @@ class FWAdminClient(object):
         self.run_result_ret = None
         try:
             if print_output:
-                print process_options
+                print(process_options)
 
-            self.run_result_ret = subprocess.check_output(process_options, stderr=subprocess.STDOUT).rstrip()
-            self.run_result_ret = re.sub("QObject::connect.*QNetworkSession::State\)\n", '', self.run_result_ret)
-            self.run_result_ret = re.sub("qt.network.ssl: Error receiving trust for a CA certificate\n", '', self.run_result_ret)
+            self.run_result_ret = subprocess.check_output(process_options, stderr=subprocess.STDOUT).decode().rstrip()
+            self.run_result_ret = re.sub(r"QObject::connect.*QNetworkSession::State\)\n", '', self.run_result_ret)
+            self.run_result_ret = re.sub(r"qt.network.ssl: Error receiving trust for a CA certificate\n", '', self.run_result_ret)
 
         except CalledProcessError as e:
             got_error = True
             if print_output:
-                print "Command failed, error code: ", e.returncode
-                print "Ouput: ", e.output
+                print("Command failed, error code: ", e.returncode)
+                print("Ouput: ", e.output)
             if not error_expected:
                 raise e
             else:
@@ -299,7 +310,7 @@ class FWAdminClient(object):
         if target:
             options.extend(["--filesetgroup", str(target)])
         create_empty_fileset_result = self.run_admin(options)
-        print create_empty_fileset_result
+        print(create_empty_fileset_result)
         matcher = re.compile(r'new fileset (?P<id>.+) created with name (?P<name>.+)')
         search = matcher.search(create_empty_fileset_result)
         id = search.group('id')

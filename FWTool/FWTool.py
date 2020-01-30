@@ -15,12 +15,14 @@
 # limitations under the License.
 
 """See docstring for FWTool class"""
-from autopkglib import DmgMounter, Processor, ProcessorError
+from __future__ import absolute_import, print_function
 
 import os
 import os.path
-from subprocess import CalledProcessError
 import sys
+from subprocess import CalledProcessError
+
+from autopkglib import DmgMounter, Processor, ProcessorError
 
 # Ensure that the FWAdminClient can be imported from CommandLine module, since
 # this Processor was imported via autopkg explicitly, the directory is not in
@@ -94,7 +96,7 @@ class FWTool(DmgMounter):
         )
 
         if print_path:
-            print "Path to Admin Tool:", FWAdminClient.get_admin_tool_path()
+            print("Path to Admin Tool:", FWAdminClient.get_admin_tool_path())
 
         self.version = self.client.get_version()
         self.major, self.minor, self.patch = self.version.split('.')
@@ -112,10 +114,10 @@ class FWTool(DmgMounter):
             the_filesets = self.client.get_filesets()
             count_filesets = sum(1 for i in the_filesets)
             self.can_list_filesets = "Yes" if count_filesets >= 0 else "No"
-        except CalledProcessError, e:
+        except CalledProcessError as e:
             self.exception = e
             self.exit_status_message = FWAdminClient.ExitStatusDescription[e.returncode][1]
-        except Exception, e:
+        except Exception as e:
             self.exception = e
 
         if self.env['FW_ADMIN_USER'] == 'fwadmin':
@@ -146,9 +148,8 @@ class FWTool(DmgMounter):
             }}
 
         if self.exception is not None:
-            print self.exception
+            print(self.exception)
 
 if __name__ == '__main__':
     PROCESSOR = FWTool()
     PROCESSOR.execute_shell()
-
