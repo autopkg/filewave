@@ -54,6 +54,10 @@ class FileWaveImporter(FWTool):
             "required": False,
             "description": "The name of the fileset group to import into - can be left blank, will be created if it does not exist.",
         },
+          "fw_update_model": {
+            "required": False,
+            "description": "Should the model be updated",
+        },
         "fw_destination_root": {
             "default": FW_FILESET_DESTINATION,
             "required": False,
@@ -175,6 +179,10 @@ class FileWaveImporter(FWTool):
                                      (import_source, fileset_name, e))
 
         finally:
+            model_update = self.env.get('fw_model_update', None)
+            if model_update == True:
+                self.client.model_update()
+                
             if dmg_mountpoint is not None:
                 self.unmount(dmg_mountpoint)
 
