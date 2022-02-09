@@ -110,7 +110,8 @@ class FileWaveImporter(FWTool):
                 app_bundle_id = fileset.custom_properties.get("autopkg_app_bundle_id", None)
                 app_version = fileset.custom_properties.get("autopkg_app_version", None)
 
-                if app_bundle_id == fw_app_bundle_id and \
+                if app_bundle_id is not None and app_version is not None and \
+                                app_bundle_id == fw_app_bundle_id and \
                                 LooseVersion(app_version) >= LooseVersion(fw_app_version):
                     print("This app version is already satisfied by the fileset %s called '%s' (%s, %s)" %\
                           (fileset.id, fileset.name, fw_app_bundle_id, fw_app_version ))
