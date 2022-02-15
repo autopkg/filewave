@@ -234,7 +234,7 @@ class FWAdminClient(object):
         return id
 
     def export_fileset(self, destination, fs_name):
-        options = [ '--exportFileset', destination, '--fileset', fs_name ]
+        options = [ '--exportFileset', destination, '--fileset', fs_name, '--name', fs_name]
         export_result = self.run_admin(options)
         matcher = re.compile(r'the fileset with ID (?P<id>.+) was exported to \'(?P<to>.+)\'')
         search = matcher.search(export_result)
