@@ -60,6 +60,10 @@ class FileWaveImporter(FWTool):
             "description": ("The location at which to place all the imported data.  Defaults to %s"
                              % FW_FILESET_DESTINATION )
         },
+        "fw_export_fileset": {
+            "required": False,
+            "description": "Should the fileset be exported to specified path",
+        },
         "fw_app_bundle_id": {
             "default": None,
             "required": False,
@@ -178,6 +182,11 @@ class FileWaveImporter(FWTool):
         finally:
             if dmg_mountpoint is not None:
                 self.unmount(dmg_mountpoint)
+
+            export_fileset = self.env.get('fw_export_fileset', None)
+            if export_fileset is not None:
+                if export_fileset != "":
+                    self.client.export_fileset(export_fileset, fileset_name)
 
 if __name__ == '__main__':
     PROCESSOR = FileWaveImporter()
