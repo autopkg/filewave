@@ -216,7 +216,7 @@ class FWAdminClient(object):
     def get_help(self):
         return self.run_admin("-h")
 
-    def import_fileset(self, path, name=None, root=None, target=None):
+    def import_fileset(self, path, name=None, root=None, target=None, activation_script=None, requirements_script=None, preflight_script=None, postflight_script=None, preuninstallation_script=None, postuninstallation_script=None, verification_script=None):
         options = ['--importFileset', path]
         if name:
             options.extend(["--name", name])
@@ -224,6 +224,20 @@ class FWAdminClient(object):
             options.extend(["--root", root])
         if target:
             options.extend(["--filesetgroup", str(target)])
+        if activation_script:
+            options.extend(["--addActivationScript", str(activation_script)])
+        if requirements_script:
+            options.extend(["--addRequirementsScript", str(requirements_script)])
+        if preflight_script:
+            options.extend(["--addPreflightScript", str(preflight_script)])
+        if postflight_script:
+            options.extend(["--addPostflightScript", str(postflight_script)])
+        if preuninstallation_script:
+            options.extend(["--addPreuninstallationScript", str(preuninstallation_script)])
+        if postuninstallation_script:
+            options.extend(["--addPostuninstallationScript", str(postuninstallation_script)])
+        if verification_script:
+            options.extend(["--addVerificationScript", str(verification_script)])
 
         import_folder_result = self.run_admin(options)
         matcher = re.compile(r'new fileset with ID (?P<id>.+) was created')
@@ -244,7 +258,7 @@ class FWAdminClient(object):
             self.export_fs_callback(id, dest)
         return id
 
-    def import_folder(self, path, name=None, root=None, target=None):
+    def import_folder(self, path, name=None, root=None, target=None, activation_script=None, requirements_script=None, preflight_script=None, postflight_script=None, preuninstallation_script=None, postuninstallation_script=None, verification_script=None):
         options = ['--importFolder', path]
         if name:
             options.extend(["--name", name])
@@ -252,6 +266,20 @@ class FWAdminClient(object):
             options.extend(["--root", root])
         if target:
             options.extend(["--filesetgroup", str(target)])
+        if activation_script:
+            options.extend(["--addActivationScript", str(activation_script)])
+        if requirements_script:
+            options.extend(["--addRequirementsScript", str(requirements_script)])
+        if preflight_script:
+            options.extend(["--addPreflightScript", str(preflight_script)])
+        if postflight_script:
+            options.extend(["--addPostflightScript", str(postflight_script)])
+        if preuninstallation_script:
+            options.extend(["--addPreuninstallationScript", str(preuninstallation_script)])
+        if postuninstallation_script:
+            options.extend(["--addPostuninstallationScript", str(postuninstallation_script)])
+        if verification_script:
+            options.extend(["--addVerificationScript", str(verification_script)])
 
         import_folder_result = self.run_admin(options)
         matcher = re.compile(r'new fileset with ID (?P<id>.+) was created')

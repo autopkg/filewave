@@ -77,7 +77,42 @@ class FileWaveImporter(FWTool):
             "required": False,
             "description": "This should be the CFBundleShortVersionString value \
                            from the apps Info.plist."
-        }
+        },
+        "fw_fileset_activation_script": {
+            "default": None,
+            "required": False,
+            "description": "The location of an activation script. Needs to be in the imported folder and executable.",
+        },
+        "fw_fileset_requirements_script": {
+            "default": None,
+            "required": False,
+            "description": "The location of a requirements script. Needs to be in the imported folder and executable.",
+        },
+        "fw_fileset_preflight_script": {
+            "default": None,
+            "required": False,
+            "description": "The location of a preflight script. Needs to be in the imported folder and executable.",
+        },
+        "fw_fileset_postflight_script": {
+            "default": None,
+            "required": False,
+            "description": "The location of a postflight script. Needs to be in the imported folder and executable.",
+        },
+        "fw_fileset_preuninstallation_script": {
+            "default": None,
+            "required": False,
+            "description": "The location of a preuninstallation script. Needs to be in the imported folder and executable.",
+        },
+        "fw_fileset_postuninstallation_script": {
+            "default": None,
+            "required": False,
+            "description": "The location of a postuninstallation script. Needs to be in the imported folder and executable.",
+        },
+        "fw_fileset_verification_script": {
+            "default": None,
+            "required": False,
+            "description": "The location of a verification script. Needs to be in the imported folder and executable.",
+        },
     }
 
     input_variables = dict(COMMON_FILEWAVE_VARIABLES, **importer_variables)
@@ -131,6 +166,13 @@ class FileWaveImporter(FWTool):
         destination_root = self.env.get('fw_destination_root',
                                         FW_FILESET_DESTINATION)
         find_type_in_dmg = self.env.get('fw_dmg_content_type', None)
+        fileset_activation_script = self.env.get('fw_fileset_activation_script', None)
+        fileset_requirements_script = self.env.get('fw_fileset_requirements_script', None)
+        fileset_preflight_script = self.env.get('fw_fileset_preflight_script', None)
+        fileset_postflight_script = self.env.get('fw_fileset_postflight_script', None)
+        fileset_preuninstallation_script = self.env.get('fw_fileset_preuninstallation_script', None)
+        fileset_postuninstallation_script = self.env.get('fw_fileset_postuninstallation_script', None)
+        fileset_verification_script = self.env.get('fw_fileset_verification_script', None)
 
         fileset_id = None
         dmg_mountpoint = None
@@ -151,7 +193,14 @@ class FileWaveImporter(FWTool):
                     fileset_id = self.client.import_folder(path=import_source,
                                                       name=fileset_name,
                                                       root=destination_root,
-                                                      target=fileset_group)
+                                                      target=fileset_group,
+                                                      activation_script=fileset_activation_script,
+                                                      requirements_script=fileset_requirements_script,
+                                                      preflight_script=fileset_preflight_script,
+                                                      postflight_script=fileset_postflight_script,
+                                                      preuninstallation_script=fileset_preuninstallation_script,
+                                                      postuninstallation_script=fileset_postuninstallation_script,
+                                                      verification_script=fileset_verification_script)
 
                 if FILEWAVE_SUMMARY_RESULT in self.env:
                     del self.env[FILEWAVE_SUMMARY_RESULT]
