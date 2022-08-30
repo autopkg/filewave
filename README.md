@@ -65,6 +65,11 @@ use of the --updateModel feature of the Admin CLI):
 Then on the machine running autopkg, set the FW_ADMIN_USER value:
 
     defaults write com.github.autopkg FW_ADMIN_USER autopkg
+
+To enable model update on an override add:
+    
+    <key>fw_model_update</key>
+    <true/>
     
 # Validation of the setup
 In order to quickly validate whether or not your setup is working you can run
