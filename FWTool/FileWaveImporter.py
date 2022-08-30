@@ -20,7 +20,7 @@ import glob
 import os
 import os.path
 import sys
-from distutils.version import LooseVersion
+from packaging.version import Version
 
 from autopkglib import Processor, ProcessorError
 
@@ -151,7 +151,7 @@ class FileWaveImporter(FWTool):
 
                 if app_bundle_id is not None and app_version is not None and \
                                 app_bundle_id == fw_app_bundle_id and \
-                                LooseVersion(app_version) >= LooseVersion(fw_app_version):
+                                Version(app_version) >= Version(fw_app_version):
                     print("This app version is already satisfied by the fileset %s called '%s' (%s, %s)" %\
                           (fileset.id, fileset.name, fw_app_bundle_id, fw_app_version ))
                     return
